@@ -14,16 +14,11 @@
 
 ## 3. Theo dõi hoạt động thể chất
 - Đếm bước chân, đo khoảng cách đi bộ/chạy.
-Tính lượng calo tiêu thụ.
+- Tính lượng calo tiêu thụ.
 - Ghi nhận thời gian tập luyện, số lần lặp, khối lượng tạ...
-- Đồng bộ với thiết bị đeo (smartwatch, smartband...).
+<!-- - Đồng bộ với thiết bị đeo (smartwatch, smartband...). -->
 
 ## 4. Theo dõi chế độ dinh dưỡng
-- Nhập thực đơn hằng ngày (bữa sáng/trưa/tối).
-- Tính toán lượng calo nạp vào, chia theo chất (carb, protein, fat).
-- Đề xuất khẩu phần ăn phù hợp với mục tiêu (giảm cân, tăng cơ...).
-
-## 5. Theo dõi chế độ dinh dưỡng
 - Nhập thực đơn hằng ngày (bữa sáng/trưa/tối).
 - Tính toán lượng calo nạp vào, chia theo chất (carb, protein, fat).
 - Đề xuất khẩu phần ăn phù hợp với mục tiêu (giảm cân, tăng cơ...).
