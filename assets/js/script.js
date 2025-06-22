@@ -363,3 +363,10 @@ window.UTHHealthApp = {
     calculateBMI,
     getHealthStatus
 };
+
+
+
+// đóng mở side bar
+document.getElementById('mobile-menu-btn').onclick = function() {
+    document.getElementById('sidebar').classList.toggle('active');
+};
