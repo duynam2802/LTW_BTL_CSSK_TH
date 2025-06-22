@@ -26,8 +26,8 @@ Content-Type: application/json
 Content-Type: <application/x-www-form-urlencoded>
 ```
 - **Body (raw → x-www-form-urlencoded):** 
-```http
-q :<văn_bản_tiếng_việt>
+```js
+q : <văn_bản_tiếng_việt>
 ```
 
 
