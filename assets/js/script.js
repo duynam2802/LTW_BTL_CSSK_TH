@@ -769,6 +769,7 @@ async function logout() {
 
 function renderHealthCharts(data) {
     if (!data || !data.length) return;
+    
 
     const labels = data.map(item => formatDate(item.measure_date));
     const bmi = data.map(item => item.bmi);
@@ -777,8 +778,15 @@ function renderHealthCharts(data) {
     const heartRate = data.map(item => item.heart_rate);
     const weights = data.map(item => item.weight);
     const heights = data.map(item => item.height);
+    
 
-    // Biểu đồ đường
+    const defaultFont = {
+        family: 'Arial, "Segoe UI", Roboto, sans-serif',
+        size: 14,
+        weight: 'normal'
+    };
+
+    // Biểu đồ đường – Chỉ số sức khỏe
     new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: {
@@ -788,38 +796,69 @@ function renderHealthCharts(data) {
                     label: 'BMI',
                     data: bmi,
                     borderColor: 'blue',
-                    fill: false
+                    fill: false,
+                    tension: 0.2
                 },
                 {
                     label: 'Huyết áp Tâm thu',
                     data: systolic,
                     borderColor: 'red',
-                    fill: false
+                    fill: false,
+                    tension: 0.2
                 },
                 {
                     label: 'Huyết áp Tâm trương',
                     data: diastolic,
                     borderColor: 'orange',
-                    fill: false
+                    fill: false,
+                    tension: 0.2
                 },
                 {
                     label: 'Nhịp tim',
                     data: heartRate,
                     borderColor: 'green',
-                    fill: false
+                    fill: false,
+                    tension: 0.2
                 }
             ]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: { position: 'top' },
-                title: { display: true, text: 'Chỉ số sức khỏe theo thời gian' }
+                title: {
+                    display: true,
+                    text: 'Chỉ số sức khỏe theo thời gian',
+                    font: {
+                        ...defaultFont,
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    color: '#333'
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: defaultFont,
+                        color: '#333'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        font: defaultFont
+                    }
+                },
+                y: {
+                    ticks: {
+                        font: defaultFont
+                    }
+                }
             }
         }
     });
 
-    // Biểu đồ cột
+    // Biểu đồ cột – Chiều cao và Cân nặng
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
@@ -840,8 +879,35 @@ function renderHealthCharts(data) {
         options: {
             responsive: true,
             plugins: {
-                title: { display: true, text: 'Chiều cao và Cân nặng' },
-                legend: { position: 'top' }
+                title: {
+                    display: true,
+                    text: 'Chiều cao và Cân nặng',
+                    font: {
+                        ...defaultFont,
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    color: '#333'
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: defaultFont,
+                        color: '#333'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        font: defaultFont
+                    }
+                },
+                y: {
+                    ticks: {
+                        font: defaultFont
+                    }
+                }
             }
         }
     });
