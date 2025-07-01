@@ -11,6 +11,18 @@ body {
     line-height: 1.6;
 }
 
+.charts-container {
+    margin-top: 30px;
+}
+
+.charts-container canvas {
+    width: 100% !important;
+    max-width: 100%;
+    height: 300px !important;
+    margin-top: 20px;
+}
+
+
 .app {
     display: flex;
     min-height: 100vh;

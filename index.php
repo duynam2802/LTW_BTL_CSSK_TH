@@ -12,6 +12,8 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UTH Health & Fitness Tracking</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <!-- Mobile Menu Toggle -->
@@ -191,6 +193,13 @@ if (!isset($_SESSION['user_id'])) {
                         <button type="submit" class="btn-primary">Lưu chỉ số</button>
                     </form>
                 </div>
+                <div class="charts-container">
+    <h3>Biểu đồ chỉ số sức khỏe</h3>
+    <canvas id="lineChart"></canvas>
+
+    <h3>Chiều cao và Cân nặng</h3>
+    <canvas id="barChart"></canvas>
+</div>
             </section>
 
             <!-- Nutrition Section -->

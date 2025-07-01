@@ -254,7 +254,9 @@ function updateRecentActivities(activities) {
 async function loadHealthData() {
     try {
         const healthData = await apiRequest('health/stats.php');
-        updateHealthStats(healthData);
+updateHealthStats(healthData);
+renderHealthCharts(healthData.history); // Dùng dữ liệu lịch sử
+
     } catch (error) {
         console.error('Failed to load health data:', error);
     }
@@ -763,4 +765,84 @@ async function logout() {
     } catch (error) {
         showAlert('Không thể đăng xuất', 'error');
     }
+}
+
+function renderHealthCharts(data) {
+    if (!data || !data.length) return;
+
+    const labels = data.map(item => formatDate(item.measure_date));
+    const bmi = data.map(item => item.bmi);
+    const systolic = data.map(item => item.systolic);
+    const diastolic = data.map(item => item.diastolic);
+    const heartRate = data.map(item => item.heart_rate);
+    const weights = data.map(item => item.weight);
+    const heights = data.map(item => item.height);
+
+    // Biểu đồ đường
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'BMI',
+                    data: bmi,
+                    borderColor: 'blue',
+                    fill: false
+                },
+                {
+                    label: 'Huyết áp Tâm thu',
+                    data: systolic,
+                    borderColor: 'red',
+                    fill: false
+                },
+                {
+                    label: 'Huyết áp Tâm trương',
+                    data: diastolic,
+                    borderColor: 'orange',
+                    fill: false
+                },
+                {
+                    label: 'Nhịp tim',
+                    data: heartRate,
+                    borderColor: 'green',
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Chỉ số sức khỏe theo thời gian' }
+            }
+        }
+    });
+
+    // Biểu đồ cột
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Cân nặng (kg)',
+                    data: weights,
+                    backgroundColor: 'purple'
+                },
+                {
+                    label: 'Chiều cao (cm)',
+                    data: heights,
+                    backgroundColor: 'gray'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Chiều cao và Cân nặng' },
+                legend: { position: 'top' }
+            }
+        }
+    });
 }
