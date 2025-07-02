@@ -53,7 +53,7 @@ body {
 .logo-text h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    background: linear-gradient(135deg, #018486, #018486);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -61,7 +61,7 @@ body {
 
 .logo-text p {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: #da1c2d;
 }
 
 .nav-menu {
@@ -425,7 +425,7 @@ body {
 
 /* Buttons */
 .btn-primary {
-    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    background: linear-gradient(135deg, #018486, #06b6d4);
     color: white;
     border: none;
     padding: 0.875rem 1.5rem;
@@ -438,6 +438,7 @@ body {
 .btn-primary:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    
 }
 
 .btn-start {
@@ -452,7 +453,7 @@ body {
 }
 
 .btn-start:hover {
-    background: #2563eb;
+    background: #018486;
 }
 
 /* Meal Selector */
@@ -673,7 +674,7 @@ body {
 }
 
 .activity-btn:hover {
-    border-color: #3b82f6;
+    border-color: #018486;
     background: #f8fafc;
 }
 
@@ -718,7 +719,7 @@ body {
 .avatar {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    background: linear-gradient(135deg, #018486, #06b6d4);
     border-radius: 50%;
     display: flex;
     align-items: center;
