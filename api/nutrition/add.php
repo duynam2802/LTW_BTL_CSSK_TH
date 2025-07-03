@@ -130,7 +130,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => "Đã thêm $inserted món ăn thành công."
+        'message' => "Đã thêm món ăn thành công!"
     ]);
     
 } catch (Exception $e) {

@@ -1,5 +1,6 @@
 // Global variables
 let currentUser = null;
+let healthHistoryRaw = [];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
@@ -168,7 +169,7 @@ async function apiRequest(endpoint, method = 'GET', data = null) {
         return result;
     } catch (error) {
         console.error('API Error:', error);
-        showAlert('Có lỗi xảy ra: ' + error.message, 'error');
+        showToast('Có lỗi xảy ra: ' + error.message, 'error');
         throw error;
     } finally {
         hideLoading();
@@ -280,7 +281,46 @@ function updateRecentActivities(activities) {
 async function loadHealthData() {
     try {
         const healthData = await apiRequest('health/stats.php');
-        updateHealthStats(healthData);
+        updateHealthHistory(healthData.history);
+
+        // Filter tháng/năm
+        const monthInput = document.getElementById('filterMonthYear');
+        const prevBtn = document.getElementById('prevMonthBtn');
+        const nextBtn = document.getElementById('nextMonthBtn');
+        const nowBtn = document.getElementById('currentMonthBtn');
+
+        // Set mặc định là tháng hiện tại
+        const now = new Date();
+        const pad = n => n < 10 ? '0' + n : n;
+        monthInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+
+        function updateFilter() {
+            updateHealthHistory(healthHistoryRaw, monthInput.value);
+        }
+
+        monthInput.onchange = updateFilter;
+
+        prevBtn.onclick = function() {
+            let [y, m] = monthInput.value.split('-').map(Number);
+            m--;
+            if (m < 1) { m = 12; y--; }
+            monthInput.value = `${y}-${pad(m)}`;
+            updateFilter();
+        };
+        nextBtn.onclick = function() {
+            let [y, m] = monthInput.value.split('-').map(Number);
+            m++;
+            if (m > 12) { m = 1; y++; }
+            monthInput.value = `${y}-${pad(m)}`;
+            updateFilter();
+        };
+        nowBtn.onclick = function() {
+            monthInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+            updateFilter();
+        };
+
+        // Lọc ngay khi load
+        updateFilter();
 
         updateHealthStats(healthData);
         renderHealthCharts(healthData.history);
@@ -317,6 +357,43 @@ function updateHealthStats(data) {
     `).join('');
 }
 
+function updateHealthHistory(history, filterMonthYear = '') {
+    const container = document.getElementById('healthHistory');
+    if (!container) return;
+    healthHistoryRaw = history;
+
+    let filtered = history || [];
+    if (filterMonthYear) {
+        const [year, month] = filterMonthYear.split('-');
+        filtered = filtered.filter(item => {
+            const d = new Date(item.measure_date);
+            return d.getFullYear() == year && (d.getMonth() + 1) == Number(month);
+        });
+    }
+
+    filtered.sort((a, b) => new Date(b.measure_date) - new Date(a.measure_date));
+
+    if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">❤️</div><h3>Chưa có dữ liệu</h3><p>Hãy thêm chỉ số sức khỏe đầu tiên của bạn</p></div>';
+        return;
+    }
+
+    container.innerHTML = filtered.map(item => `
+        <div class="history-item">
+            <div class="history-info">
+                <h4>${formatDate(item.measure_date)}</h4>
+                <p>
+                    Cân nặng: <b>${item.weight} kg</b>,
+                    Cao: <b>${item.height} cm</b>,
+                    Huyết áp: <b>${item.systolic}/${item.diastolic} mmHg</b>,
+                    Nhịp tim: <b>${item.heart_rate} bpm</b>
+                </p>
+                ${item.notes ? `<p>Ghi chú: ${item.notes}</p>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
 async function handleHealthSubmit(e) {
     e.preventDefault();
     
@@ -332,12 +409,12 @@ async function handleHealthSubmit(e) {
     
     try {
         await apiRequest('health/add.php', 'POST', formData);
-        showAlert('Đã lưu thông tin sức khỏe thành công!', 'success');
+        showToast('Đã lưu thông tin sức khỏe thành công!', 'success');
         document.getElementById('healthForm').reset();
         loadHealthData();
         loadDashboardData();
     } catch (error) {
-        showAlert('Không thể lưu thông tin sức khỏe', 'error');
+        showToast('Không thể lưu thông tin sức khỏe', 'error');
     }
 }
 
@@ -426,22 +503,20 @@ function updateTodayMeals(meals) {
 
 async function handleNutritionSubmit(e) {
     e.preventDefault();
-    
+
     const formData = {
         mealType: document.getElementById('selectedMeal').value,
         foodName: document.getElementById('foodName').value
-        // quantity: parseInt(document.getElementById('foodQuantity').value),
-        // calories: parseInt(document.getElementById('foodCalories').value)
     };
-    
+
     try {
-        await apiRequest('nutrition/add.php', 'POST', formData);
-        showAlert('Đã thêm món ăn thành công!', 'success');
+        const res = await apiRequest('nutrition/add.php', 'POST', formData);
+        showToast(res.message || 'Đã thêm món ăn thành công!', 'success');
         document.getElementById('nutritionForm').reset();
         loadNutritionData();
         loadDashboardData();
     } catch (error) {
-        showAlert('Không thể thêm món ăn', 'error');
+        showToast('Không thể thêm món ăn', 'error');
     }
 }
 
@@ -536,12 +611,12 @@ async function handleWorkoutSubmit(e) {
     
     try {
         await apiRequest('workouts/add.php', 'POST', formData);
-        showAlert('Đã lưu buổi tập thành công!', 'success');
+        showToast('Đã lưu buổi tập thành công!', 'success');
         document.getElementById('workoutForm').reset();
         loadWorkoutData();
         loadDashboardData();
     } catch (error) {
-        showAlert('Không thể lưu buổi tập', 'error');
+        showToast('Không thể lưu buổi tập', 'error');
     }
 }
 
@@ -550,11 +625,11 @@ async function deleteWorkout(id) {
     
     try {
         await apiRequest('workouts/delete.php', 'POST', { id });
-        showAlert('Đã xóa buổi tập thành công!', 'success');
+        showToast('Đã xóa buổi tập thành công!', 'success');
         loadWorkoutData();
         loadDashboardData();
     } catch (error) {
-        showAlert('Không thể xóa buổi tập', 'error');
+        showToast('Không thể xóa buổi tập', 'error');
     }
 }
 
@@ -637,12 +712,12 @@ async function handleSleepSubmit(e) {
     
     try {
         await apiRequest('sleep/add.php', 'POST', formData);
-        showAlert('Đã lưu dữ liệu giấc ngủ thành công!', 'success');
+        showToast('Đã lưu dữ liệu giấc ngủ thành công!', 'success');
         document.getElementById('sleepForm').reset();
         loadSleepData();
         loadDashboardData();
     } catch (error) {
-        showAlert('Không thể lưu dữ liệu giấc ngủ', 'error');
+        showToast('Không thể lưu dữ liệu giấc ngủ', 'error');
     }
 }
 
@@ -651,11 +726,11 @@ async function deleteSleep(id) {
     
     try {
         await apiRequest('sleep/delete.php', 'POST', { id });
-        showAlert('Đã xóa dữ liệu giấc ngủ thành công!', 'success');
+        showToast('Đã xóa dữ liệu giấc ngủ thành công!', 'success');
         loadSleepData();
         loadDashboardData();
     } catch (error) {
-        showAlert('Không thể xóa dữ liệu giấc ngủ', 'error');
+        showToast('Không thể xóa dữ liệu giấc ngủ', 'error');
     }
 }
 
@@ -716,10 +791,10 @@ async function handleProfileSubmit(e) {
     
     try {
         await apiRequest('profile/update.php', 'POST', formData);
-        showAlert('Đã cập nhật thông tin thành công!', 'success');
+        showToast('Đã cập nhật thông tin thành công!', 'success');
         loadProfileData();
     } catch (error) {
-        showAlert('Không thể cập nhật thông tin', 'error');
+        showToast('Không thể cập nhật thông tin', 'error');
     }
 }
 
@@ -790,7 +865,7 @@ async function logout() {
         await apiRequest('auth/logout.php', 'POST');
         window.location.href = 'login.html';
     } catch (error) {
-        showAlert('Không thể đăng xuất', 'error');
+        showToast('Không thể đăng xuất', 'error');
     }
 }
 
@@ -938,4 +1013,30 @@ function renderHealthCharts(data) {
             }
         }
     });
+}
+
+function showToast(message, type = 'success') {
+    // Xóa toast cũ nếu có
+    let oldToast = document.getElementById('toastNotification');
+    if (oldToast) oldToast.remove();
+
+    // Tạo toast mới
+    const toast = document.createElement('div');
+    toast.id = 'toastNotification';
+    toast.className = `toast-notification ${type}`;
+    toast.innerHTML = `
+        <span class="message">${message}</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">×</button>
+        <div class="progress-bar"></div>
+    `;
+    document.body.appendChild(toast);
+
+    // Hiện toast
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    // Tự động ẩn sau 5s
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
 }

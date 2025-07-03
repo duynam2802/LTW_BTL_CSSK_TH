@@ -91,7 +91,7 @@ try {
         ];
     }
 
-    // Lấy toàn bộ lịch sử để vẽ biểu đồ
+    // Lấy toàn bộ lịch sử 
     $historyQuery = "SELECT weight, height, systolic_bp, diastolic_bp, heart_rate, measure_date 
                      FROM health_records 
                      WHERE user_id = :user_id 

@@ -7,14 +7,17 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UTH Health & Fitness Tracking</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/css/toast.css">
 
 </head>
+
 <body>
     <!-- Mobile Menu Toggle -->
     <div class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -38,7 +41,7 @@ if (!isset($_SESSION['user_id'])) {
                     <span>🚪</span> Đăng xuất
                 </button>
             </div>
-            
+
             <ul class="nav-menu">
                 <li><a href="#" class="nav-item active" data-section="dashboard">📊 Tổng quan</a></li>
                 <li><a href="#" class="nav-item" data-section="health">❤️ Sức khỏe</a></li>
@@ -67,7 +70,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <span class="value" id="currentBMI">--</span>
                                     <span class="unit">kg/m²</span>
                                 </div>
-                                 <p id="bmiStatus">Đang tải...</p>
+                                <p id="bmiStatus">Đang tải...</p>
                             </div>
                             <div class="stat-icon health">❤️</div>
                         </div>
@@ -150,56 +153,78 @@ if (!isset($_SESSION['user_id'])) {
                     <!-- Health stats will be loaded here -->
                 </div>
 
-                <div class="form-card">
-                    <div class="card-header">
-                        <h3>Thêm chỉ số mới</h3>
-                        <span class="icon">➕</span>
+                <div class="dashboard-grid">
+                    <div class="form-card">
+                        <div class="card-header">
+                            <h3>Thêm chỉ số mới</h3>
+                            <span class="icon">➕</span>
+                        </div>
+                        <form class="health-form" id="healthForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Cân nặng (kg)</label>
+                                    <input type="number" step="0.1" placeholder="70" id="weight" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Chiều cao (cm)</label>
+                                    <input type="number" placeholder="175" id="height" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Huyết áp tâm thu (mmHg)</label>
+                                    <input type="number" placeholder="120" id="systolic">
+                                </div>
+                                <div class="form-group">
+                                    <label>Huyết áp tâm trương (mmHg)</label>
+                                    <input type="number" placeholder="80" id="diastolic">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Nhịp tim (bpm)</label>
+                                    <input type="number" placeholder="72" id="heartRate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày đo</label>
+                                    <input type="date" id="measureDate" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Ghi chú tình trạng</label>
+                                <textarea placeholder="Cảm thấy khỏe mạnh, năng lượng tốt..." id="healthNotes"></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Lưu chỉ số</button>
+                        </form>
                     </div>
-                    <form class="health-form" id="healthForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Cân nặng (kg)</label>
-                                <input type="number" step="0.1" placeholder="70" id="weight" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Chiều cao (cm)</label>
-                                <input type="number" placeholder="175" id="height" required>
+                    <!-- Lịch sử chỉ số sức khỏe -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Lịch sử chỉ số sức khỏe</h3>
+                            <span class="icon">📅</span>
+                        </div>
+
+                        <div class="history-filter" id="healthHistoryFilter" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="month" id="filterMonthYear" >
+                            <div class="filter-btn-group">
+                                <button class="filter-btn" id="prevMonthBtn">&#8592;</button>
+                                <button class="filter-btn" id="currentMonthBtn"><span>&#128197; HIỆN TẠI</span></button>
+                                <button class="filter-btn" id="nextMonthBtn">&#8594;</button>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Huyết áp tâm thu (mmHg)</label>
-                                <input type="number" placeholder="120" id="systolic" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Huyết áp tâm trương (mmHg)</label>
-                                <input type="number" placeholder="80" id="diastolic" required>
-                            </div>
+                        
+                        <div class="health-history" id="healthHistory">
+                            <!-- Health history will be loaded here -->
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nhịp tim (bpm)</label>
-                                <input type="number" placeholder="72" id="heartRate" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Ngày đo</label>
-                                <input type="date" id="measureDate" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Ghi chú tình trạng</label>
-                            <textarea placeholder="Cảm thấy khỏe mạnh, năng lượng tốt..." id="healthNotes"></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary">Lưu chỉ số</button>
-                    </form>
+                    </div>
                 </div>
                 <div class="charts-container">
-    <h3>Biểu đồ chỉ số sức khỏe</h3>
-    <canvas id="lineChart"></canvas>
+                    <h3>Biểu đồ chỉ số sức khỏe</h3>
+                    <canvas id="lineChart"></canvas>
 
-    <h3>Chiều cao và Cân nặng</h3>
-    <canvas id="barChart"></canvas>
-</div>
+                    <h3>Chiều cao và Cân nặng</h3>
+                    <canvas id="barChart"></canvas>
+                </div>
             </section>
 
             <!-- Nutrition Section -->
@@ -223,13 +248,13 @@ if (!isset($_SESSION['user_id'])) {
                             <div class="meal-selector">
                                 <button type="button" class="meal-btn active" data-meal="breakfast">🌅 Bữa sáng</button>
                                 <button type="button" class="meal-btn" data-meal="lunch">☀️ Bữa trưa</button>
-                                <button type="button" class="meal-btn" data-meal="dinner">🌆 Bữa tối</button>
+                                <button type="button" class="meal-btn" data-meal="dinner">🌙 Bữa tối</button>
                                 <button type="button" class="meal-btn" data-meal="snack">🍎 Ăn vặt</button>
                             </div>
                             <input type="hidden" id="selectedMeal" value="breakfast">
                             <div class="form-group">
                                 <label>Tên món ăn</label>
-                                <textarea  type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName" required></textarea>
+                                <textarea type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName" required></textarea>
                             </div>
                             <!-- <div class="form-row">
                                 <div class="form-group">
@@ -441,4 +466,5 @@ if (!isset($_SESSION['user_id'])) {
 
     <script src="assets/js/script.js"></script>
 </body>
+
 </html>
