@@ -15,6 +15,8 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="assets/css/toast.css">
+    <link rel="stylesheet" href="assets/icons/fontawesome-free-6.7.2-web/css/all.min.css">
+
 
 </head>
 
@@ -201,14 +203,14 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="card">
                         <div class="card-header">
                             <h3>Lịch sử chỉ số sức khỏe</h3>
-                            <span class="icon">📅</span>
+                            <!-- <span class="icon"><i class="fa-regular fa-calendar"></i></span> -->
                         </div>
 
                         <div class="history-filter" id="healthHistoryFilter" style="display: flex; align-items: center; gap: 8px;">
                             <input type="month" id="filterMonthYear" >
                             <div class="filter-btn-group">
                                 <button class="filter-btn" id="prevMonthBtn">&#8592;</button>
-                                <button class="filter-btn" id="currentMonthBtn"><span>&#128197; HIỆN TẠI</span></button>
+                                <button class="filter-btn" id="currentMonthBtn"><i class="fa-regular fa-calendar"></i><span> HIỆN TẠI</span></button>
                                 <button class="filter-btn" id="nextMonthBtn">&#8594;</button>
                             </div>
                         </div>
