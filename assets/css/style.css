@@ -940,22 +940,17 @@ html {
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
-
-#nutritionForm .form-group input {
+#nutritionForm .form-group textarea {
     height: 169px;
     width: 100%;
-    /* align-self: flex-start;
-    text-align: left; */
-    vertical-align: top;
-    padding-top: 12px;
-}
-#nutritionForm .form-group {
-    align-items: flex-start;
-}
-#nutritionForm .form-group input#foodName::placeholder {
+    padding: 12px;
+    resize: none; /* nếu không muốn người dùng kéo giãn */
+    box-sizing: border-box;
     text-align: left;
-    align-items: flex-start;
+    vertical-align: top;
+}
 
-    /* color: #a0aec0; Màu placeholder nhẹ hơn */
+#nutritionForm .form-group textarea::placeholder {
+    text-align: left;
     opacity: 1;
 }

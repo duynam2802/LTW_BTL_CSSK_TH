@@ -229,7 +229,7 @@ if (!isset($_SESSION['user_id'])) {
                             <input type="hidden" id="selectedMeal" value="breakfast">
                             <div class="form-group">
                                 <label>Tên món ăn</label>
-                                <input type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName" required>
+                                <textarea  type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName" required></textarea>
                             </div>
                             <!-- <div class="form-row">
                                 <div class="form-group">
