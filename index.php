@@ -67,7 +67,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <span class="value" id="currentBMI">--</span>
                                     <span class="unit">kg/m²</span>
                                 </div>
-                                <p class="stat-change positive" id="bmiStatus">Đang tải...</p>
+                                 <p id="bmiStatus">Đang tải...</p>
                             </div>
                             <div class="stat-icon health">❤️</div>
                         </div>
@@ -229,9 +229,9 @@ if (!isset($_SESSION['user_id'])) {
                             <input type="hidden" id="selectedMeal" value="breakfast">
                             <div class="form-group">
                                 <label>Tên món ăn</label>
-                                <input type="text" placeholder="Ví dụ: Cơm gà nướng" id="foodName" required>
+                                <input type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName" required>
                             </div>
-                            <div class="form-row">
+                            <!-- <div class="form-row">
                                 <div class="form-group">
                                     <label>Khối lượng (g)</label>
                                     <input type="number" placeholder="200" id="foodQuantity" required>
@@ -240,7 +240,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <label>Calo (kcal)</label>
                                     <input type="number" placeholder="300" id="foodCalories" required>
                                 </div>
-                            </div>
+                            </div> -->
                             <button type="submit" class="btn-primary">Thêm món ăn</button>
                         </form>
                     </div>

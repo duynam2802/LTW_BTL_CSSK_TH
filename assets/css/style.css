@@ -285,6 +285,10 @@ body {
 .stat-change.positive {
     color: #059669;
 }
+#bmiStatus {
+    font-size: 0.75rem;
+}
+
 .stat-icon {
     width: 48px;
     height: 48px;
@@ -935,4 +939,23 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+#nutritionForm .form-group input {
+    height: 169px;
+    width: 100%;
+    /* align-self: flex-start;
+    text-align: left; */
+    vertical-align: top;
+    padding-top: 12px;
+}
+#nutritionForm .form-group {
+    align-items: flex-start;
+}
+#nutritionForm .form-group input#foodName::placeholder {
+    text-align: left;
+    align-items: flex-start;
+
+    /* color: #a0aec0; Màu placeholder nhẹ hơn */
+    opacity: 1;
 }
