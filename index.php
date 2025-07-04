@@ -281,6 +281,11 @@ if (!isset($_SESSION['user_id'])) {
                             <!-- Today's meals will be loaded here -->
                         </div>
                     </div>
+                    
+                </div>
+                <div class="charts-container">
+                    <h3>Biểu đồ chỉ số sức khỏe</h3>
+                    <canvas id="macroLineChart"></canvas>
                 </div>
             </section>
 

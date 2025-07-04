@@ -421,17 +421,20 @@ async function handleHealthSubmit(e) {
 // Nutrition Functions
 async function loadNutritionData() {
     try {
-        const [stats, meals] = await Promise.all([
+        const [stats, meals, history] = await Promise.all([
             apiRequest('nutrition/stats.php'),
-            apiRequest('nutrition/today.php')
+            apiRequest('nutrition/today.php'),
+            apiRequest('nutrition/history.php') // <- thêm dòng này
         ]);
         
         updateNutritionStats(stats);
         updateTodayMeals(meals);
+        renderMacroLineChart(history); // <- vẽ biểu đồ từ dữ liệu lịch sử
     } catch (error) {
         console.error('Failed to load nutrition data:', error);
     }
 }
+
 
 function updateNutritionStats(data) {
     const container = document.getElementById('nutritionStats');
@@ -1040,3 +1043,88 @@ function showToast(message, type = 'success') {
         setTimeout(() => toast.remove(), 300);
     }, 5000);
 }
+
+
+// Vẽ biểu đồ dinh dưỡng đường theo ngày
+function renderMacroLineChart(data) {
+    const ctx = document.getElementById('macroLineChart').getContext('2d');
+    if (window.macroChart) window.macroChart.destroy();
+
+    const labels = data.map(d => d.date);
+    const carbsData = data.map(d => d.carbs);
+    const proteinData = data.map(d => d.protein);
+    const fatData = data.map(d => d.fat);
+
+    window.macroChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Carbs (g)',
+                    data: carbsData,
+                    borderColor: '#f4c542',
+                    backgroundColor: '#f4c54222',
+                    fill: false,
+                    tension: 0.3
+                },
+                {
+                    label: 'Protein (g)',
+                    data: proteinData,
+                    borderColor: '#ff6f61',
+                    backgroundColor: '#ff6f6122',
+                    fill: false,
+                    tension: 0.3
+                },
+                {
+                    label: 'Fat (g)',
+                    data: fatData,
+                    borderColor: '#6bd098',
+                    backgroundColor: '#6bd09822',
+                    fill: false,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Lượng Carbs, Protein, Fat theo ngày'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Gram (g)'
+                    },
+                    beginAtZero: true
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Ngày'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Gọi khi load trang
+async function loadNutritionHistoryChart() {
+    try {
+        const history = await apiRequest('nutrition/history.php');
+        renderMacroLineChart(history);
+    } catch (error) {
+        console.error('Không thể tải dữ liệu lịch sử dinh dưỡng:', error);
+    }
+}
+
+// Gọi khi trang tải hoặc sau khi thêm món ăn
+loadNutritionHistoryChart();
