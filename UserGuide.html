@@ -7,8 +7,31 @@
     <meta name="description" content="Hướng dẫn chi tiết cách sử dụng các thiết bị phòng tập gym một cách an toàn và hiệu quả">
     <link rel="stylesheet" href="./assets/css/UserGuide.css">
     <link rel="stylesheet" href="./assets/css/footer.css">
+    <link rel="stylesheet" href="./assets/css/home.css?v=2">
 </head>
 <body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header__logo">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:#018486;border-radius:16px;box-shadow:0 2px 8px rgba(1,132,134,0.10);font-size:2rem;">
+        🎓
+      </span>
+      <span class="header__brand">UTH Health & Fitness </span>
+    </div>
+    <nav class="header__nav">
+      <ul class="header__menu">
+        <li><a href="home.html#about">Giới thiệu</a></li>
+        <li><a href="home.html#features">Tính năng</a></li>
+        <li><a href="home.html#benefits">Lợi ích</a></li>
+        <li><a href="home.html#facility">Cơ sở vật chất</a></li>
+        <li><a href="UserGuide.html">Hướng dẫn phòng tập</a></li>
+      </ul>
+      <div class="header__auth">
+        <a href="login.html" class="btn btn--outline">Đăng nhập</a>
+        <a href="register.html" class="btn btn--primary">Đăng ký</a>
+      </div>
+    </nav>
+  </header>
     <script id="equipment-images">
         window.equipmentImages = {
             'treadmill': 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -103,31 +126,32 @@
 
     <!-- Footer Section -->
 <footer class="footer">
-    <div class="footer__container">
-      <div class="footer__brand">
-        <span class="footer__logo">🎓</span>
-        <span class="footer__title">UTH Health & Fitness</span>
-        <p class="footer__desc">Ứng dụng chăm sóc sức khỏe toàn diện cho sinh viên UTH.</p>
-      </div>
-      <div class="footer__contact">
-        <h4>Liên hệ</h4>
-        <p>Trường Đại học Giao thông Vận tải TP.HCM (UTH)</p>
-        <p>Email: UTHFitness@uth.edu.vn</p>
-        <p>Địa chỉ:  số 70, đường Tô Ký, P. Trung Mỹ Tây, TP. HCM (Cơ sở 3)</p>
-      </div>
-      <div class="footer__cta">
-        <h2>Bắt đầu hành trình chăm sóc sức khỏe của bạn!</h2>
-        <div class="cta__actions">
-          <a href="register.html" class="btn btn--primary">Đăng ký ngay</a>
-          <a href="login.html" class="btn btn--outline">Đăng nhập</a>
-        </div>
-        <p class="cta__desc">Miễn phí 100% cho sinh viên UTH</p>
-      </div>
+  <div class="footer__container">
+    <div class="footer__brand">
+      <span class="footer__logo">🎓</span>
+      <span class="footer__title">UTH Health & Fitness</span>
+      <p class="footer__desc">Ứng dụng chăm sóc sức khỏe toàn diện cho sinh viên UTH.</p>
     </div>
-    <div class="footer__bottom">
-      <span>&copy; 2025 UTH Health & Fitness. Thiết kế bởi nhóm Sinh viên UTH.</span>
+    <div class="footer__contact">
+      <h4>Liên hệ</h4>
+      <p>Trường Đại học Giao thông Vận tải TP.HCM (UTH)</p>
+      <p>Email: UTHFitness@uth.edu.vn</p>
+      <p>Địa chỉ: số 70, đường Tô Ký, P. Trung Mỹ Tây, TP. HCM (Cơ sở 3)</p>
     </div>
-  </footer>
+    <div class="footer__cta">
+      <h2>Bắt đầu hành trình chăm sóc sức khỏe của bạn!</h2>
+      <div class="cta__actions">
+        <a href="register.html" class="btn btn--primary">Đăng ký ngay</a>
+        <a href="login.html" class="btn btn--outline">Đăng nhập</a>
+      </div>
+      <p class="cta__desc">Miễn phí 100% cho sinh viên UTH</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>&copy; 2025 UTH Health & Fitness. Thiết kế bởi nhóm Sinh viên UTH.</span>
+  </div>
+</footer>
+<!-- End Footer Section -->
     <script src="./assets/js/UserGuide.js"></script>
 </body>
 </html>
