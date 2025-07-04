@@ -33,10 +33,10 @@ if (!isset($_SESSION['user_id'])) {
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon">🎓</div>
+                    <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img">
                     <div class="logo-text">
-                        <h1>UTH Health</h1>
-                        <p>Chăm sóc sức khỏe</p>
+                        <h1>Health</h1>
+                        <p>Chăm sóc sức khỏe - thể hình</p>
                     </div>
                 </div>
                 <button class="logout-btn" onclick="logout()">
@@ -50,6 +50,7 @@ if (!isset($_SESSION['user_id'])) {
                 <li><a href="#" class="nav-item" data-section="nutrition">🍽️ Dinh dưỡng</a></li>
                 <li><a href="#" class="nav-item" data-section="workouts">💪 Luyện tập</a></li>
                 <li><a href="#" class="nav-item" data-section="sleep">🌙 Giấc ngủ</a></li>
+                <li><a href="#" class="nav-item" data-section="alert">⚠️ Cảnh báo</a></li>
                 <li><a href="#" class="nav-item" data-section="profile">👤 Hồ sơ</a></li>
             </ul>
         </nav>
@@ -59,7 +60,8 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Dashboard Section -->
             <section id="dashboard" class="content-section active">
                 <div class="section-header">
-                    <h2>Chào buổi sáng, <span id="userName"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>! 👋</h2>
+                    <h2>Chào buổi sáng, <span
+                            id="userName"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>! 👋</h2>
                     <p>Hôm nay là một ngày tuyệt vời để chăm sóc sức khỏe</p>
                 </div>
 
@@ -194,7 +196,8 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú tình trạng</label>
-                                <textarea placeholder="Cảm thấy khỏe mạnh, năng lượng tốt..." id="healthNotes"></textarea>
+                                <textarea placeholder="Cảm thấy khỏe mạnh, năng lượng tốt..."
+                                    id="healthNotes"></textarea>
                             </div>
                             <button type="submit" class="btn-primary">Lưu chỉ số</button>
                         </form>
@@ -206,15 +209,16 @@ if (!isset($_SESSION['user_id'])) {
                             <span class="icon">📅</span>
                         </div>
 
-                        <div class="history-filter" id="healthHistoryFilter" style="display: flex; align-items: center; gap: 8px;">
-                            <input type="month" id="filterMonthYear" >
+                        <div class="history-filter" id="healthHistoryFilter"
+                            style="display: flex; align-items: center; gap: 8px;">
+                            <input type="month" id="filterMonthYear">
                             <div class="filter-btn-group">
                                 <button class="filter-btn" id="prevMonthBtn">&#8592;</button>
                                 <button class="filter-btn" id="currentMonthBtn"><span>&#128197; HIỆN TẠI</span></button>
                                 <button class="filter-btn" id="nextMonthBtn">&#8594;</button>
                             </div>
                         </div>
-                        
+
                         <div class="health-history" id="healthHistory">
                             <!-- Health history will be loaded here -->
                         </div>
@@ -256,7 +260,8 @@ if (!isset($_SESSION['user_id'])) {
                             <input type="hidden" id="selectedMeal" value="breakfast">
                             <div class="form-group">
                                 <label>Tên món ăn</label>
-                                <textarea type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName" required></textarea>
+                                <textarea type="text" placeholder="Ví dụ: 1 chén cơm + 200g gà nướng..." id="foodName"
+                                    required></textarea>
                             </div>
                             <!-- <div class="form-row">
                                 <div class="form-group">
@@ -281,7 +286,7 @@ if (!isset($_SESSION['user_id'])) {
                             <!-- Today's meals will be loaded here -->
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="charts-container">
                     <h3>Biểu đồ chỉ số sức khỏe</h3>
@@ -391,7 +396,8 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú</label>
-                                <textarea placeholder="Cảm giác khi thức dậy, các yếu tố ảnh hưởng..." id="sleepNotes"></textarea>
+                                <textarea placeholder="Cảm giác khi thức dậy, các yếu tố ảnh hưởng..."
+                                    id="sleepNotes"></textarea>
                             </div>
                             <button type="submit" class="btn-primary">Lưu dữ liệu giấc ngủ</button>
                         </form>
@@ -408,6 +414,40 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </section>
+
+            <!-- Alert Section -->
+            <section id="alert" class="content-section alert-section">
+                <div class="section-header">
+                    <h2>Cảnh báo & Gợi ý</h2>
+                    <p>Thông tin tổng hợp từ các chỉ số sức khỏe gần đây</p>
+                </div>
+
+                <div class="alert-container">
+                    <div class="alert-grid">
+                        <div class="alert-card" id="healthAlert">
+                            <h4>🩺 Sức khỏe tổng thể</h4>
+                            <p>⚠️ Bạn đang thiếu ngủ và nạp quá ít năng lượng so với nhu cầu.</p>
+                        </div>
+
+                        <div class="alert-card" id="dietAlert">
+                            <h4>🍽️ Ăn uống</h4>
+                            <p>📉 Lượng calo hôm nay thấp hơn nhu cầu tối thiểu 500 kcal.</p>
+                        </div>
+
+                        <div class="alert-card" id="exerciseAlert">
+                            <h4>💪 Luyện tập</h4>
+                            <p>🏃‍♂️ Bạn chưa ghi nhận bất kỳ hoạt động thể chất nào trong 3 ngày qua.</p>
+                        </div>
+
+                        <div class="alert-card" id="sleepAlert">
+                            <h4>🌙 Giấc ngủ</h4>
+                            <p>😴 Chất lượng giấc ngủ gần đây dưới 6/10 — nên điều chỉnh giờ đi ngủ và hạn chế dùng
+                                thiết bị điện tử.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
 
             <!-- Profile Section -->
             <section id="profile" class="content-section">
@@ -437,11 +477,13 @@ if (!isset($_SESSION['user_id'])) {
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Họ và tên</label>
-                                    <input type="text" id="fullName" value="<?php echo htmlspecialchars($_SESSION['full_name']); ?>" required>
+                                    <input type="text" id="fullName"
+                                        value="<?php echo htmlspecialchars($_SESSION['full_name']); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" id="email" value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
+                                    <input type="email" id="email"
+                                        value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
                                 </div>
                             </div>
                             <div class="form-row">
