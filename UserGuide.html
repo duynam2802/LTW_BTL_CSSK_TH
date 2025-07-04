@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Phòng Tập - Gym Equipment Guide</title>
+    <meta name="description" content="Hướng dẫn chi tiết cách sử dụng các thiết bị phòng tập gym một cách an toàn và hiệu quả">
+    <link rel="stylesheet" href="UserGuide.css">
+</head>
+<body>
+    <script id="equipment-images">
+        window.equipmentImages = {
+            'treadmill': 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'bench-press': 'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'leg-press': 'https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'lat-pulldown': 'https://images.pexels.com/photos/1552252/pexels-photo-1552252.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'rowing-machine': 'https://images.pexels.com/photos/4162449/pexels-photo-4162449.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'smith-machine': 'https://images.pexels.com/photos/1552103/pexels-photo-1552103.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'elliptical': 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'cable-machine': 'https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg?auto=compress&cs=tinysrgb&w=800'
+        };
+    </script>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6.5 6.5 11 11"/>
+                        <path d="m21 21-1-1"/>
+                        <path d="m3 3 1 1"/>
+                        <path d="m18 22 4-4"/>
+                        <path d="m2 6 4-4"/>
+                        <path d="m3 10 7-7"/>
+                        <path d="m14 21 7-7"/>
+                    </svg>
+                </div>
+                <h1>Hướng Dẫn Phòng Tập</h1>
+                <p>Khám phá và nắm vững cách sử dụng các thiết bị phòng tập một cách an toàn và hiệu quả</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </div>
+                    <h3>8+</h3>
+                    <p>Thiết bị chính</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="m22 21-2-2"/>
+                            <path d="m16 16 2 2"/>
+                        </svg>
+                    </div>
+                    <h3>3</h3>
+                    <p>Mức độ khó</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/>
+                        </svg>
+                    </div>
+                    <h3>2</h3>
+                    <p>Danh mục</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
+                        </svg>
+                    </div>
+                    <h3>100%</h3>
+                    <p>An toàn</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Category Filter -->
+            <div class="filter-section">
+                <button class="filter-btn active" data-category="all">Tất cả</button>
+                <button class="filter-btn" data-category="cardio">Cardio</button>
+                <button class="filter-btn" data-category="strength">Sức mạnh</button>
+            </div>
+
+            <!-- Equipment Grid -->
+            <div class="equipment-grid" id="equipmentGrid">
+                <!-- Equipment cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6.5 6.5 11 11"/>
+                        <path d="m21 21-1-1"/>
+                        <path d="m3 3 1 1"/>
+                        <path d="m18 22 4-4"/>
+                        <path d="m2 6 4-4"/>
+                        <path d="m3 10 7-7"/>
+                        <path d="m14 21 7-7"/>
+                    </svg>
+                </div>
+                <h3>Tập luyện an toàn, hiệu quả!</h3>
+                <p>Luôn nhớ khởi động trước khi tập và tham khảo ý kiến huấn luyện viên khi cần thiết.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="UserGuide.js"></script>
+</body>
+</html>
