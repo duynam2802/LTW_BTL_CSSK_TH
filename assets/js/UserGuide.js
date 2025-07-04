@@ -322,7 +322,6 @@ function setupFilterButtons() {
     });
 }
 
-// Filter equipment by category
 function filterEquipment(category) {
     const cards = document.querySelectorAll('.equipment-card');
     
@@ -334,8 +333,6 @@ function filterEquipment(category) {
         }
     });
 }
-
-// Smooth scrolling for better UX
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
