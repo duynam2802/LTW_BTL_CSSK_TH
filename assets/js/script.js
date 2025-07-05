@@ -495,7 +495,7 @@ function updateTodayMeals(meals) {
                     <h4>${data.name} <span class="meal-calories">${totalCalories} kcal</span></h4>
                     ${data.items.map(item => `
                         <div class="food-item">
-                            <span>${item.food_name} (${item.quantity}g)</span>
+                            <span>${item.food_name} (Tổng khối lượng : ${item.quantity}g)</span>
                             <span>${item.calories} kcal</span>
                         </div>
                     `).join('')}
