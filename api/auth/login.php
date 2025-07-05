@@ -58,7 +58,7 @@ try {
             // Set remember me cookie if requested
             if (isset($input['remember']) && $input['remember']) {
                 $token = bin2hex(random_bytes(32));
-                setcookie('remember_token', $token, time() + (86400 * 30), '/'); // 30 days
+                setcookie('remember_token', $token, time() + 3600, '/'); // 30 days
                 
                 // Store token in database
                 $tokenQuery = "UPDATE users SET remember_token = :token WHERE id = :id";

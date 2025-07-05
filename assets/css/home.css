@@ -768,3 +768,29 @@ body {
     border-radius: 10px;
   }
 }
+
+.btn-animate {
+  animation: pulse-glow 1.5s infinite;
+  box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+  transition: box-shadow 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+  }
+  70% {
+    box-shadow: 0 0 16px 12px rgba(16,185,129,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16,185,129,0);
+  }
+}
+
+.btn-animate:hover, .btn-animate:focus {
+  animation: none;
+  box-shadow: 0 0 16px 4px #10b981;
+  filter: brightness(1.1);
+}
