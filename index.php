@@ -120,7 +120,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <span class="value" id="avgSleep">--</span>
                                     <span class="unit">giờ</span>
                                 </div>
-                                <p class="stat-change positive" id="sleepQuality">Đang tải...</p>
+                                <p class="stat-change positive" id="sleepQualityText">Đang tải...</p>
                             </div>
                             <div class="stat-icon sleep">🌙</div>
                         </div>
@@ -409,8 +409,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <label for="sleepQuality">Chất lượng giấc ngủ:
                                     <span id="qualityValue">5</span>/10
                                 </label>
-                                <input type="range" min="1" max="10" value="5" id="sleepQuality" class="slider"
-                                    oninput="document.getElementById('qualityValue').textContent = this.value">
+                                <input type="range" min="1" max="10" value="5" id="sleepQuality" class="slider">
                             </div>
                             <div class="form-group">
                                 <label for="sleepNotes">Ghi chú</label>
@@ -433,6 +432,7 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </section>
+
 
             <!-- Alert Section -->
             <section id="alert" class="content-section alert-section">

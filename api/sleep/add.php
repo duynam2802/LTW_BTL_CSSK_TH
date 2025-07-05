@@ -69,14 +69,21 @@ try {
         exit;
     }
 
-    // 🧠 Tính duration (số giờ ngủ)
+    // 🧠 Tính duration (số giờ ngủ) - Cải thiện logic
     $bed = new DateTime($bedtime);
     $wake = new DateTime($wake_time);
+    
+    // Nếu giờ thức dậy <= giờ đi ngủ, có nghĩa là ngủ qua ngày
     if ($wake <= $bed) {
         $wake->modify('+1 day');
     }
+    
     $interval = $bed->diff($wake);
     $duration = round($interval->h + $interval->i / 60, 2); // VD: 7.5 giờ
+    
+    // Debug log để kiểm tra
+    error_log("Sleep calculation: Bedtime: $bedtime, Wake time: $wake_time, Duration: $duration hours");
+    error_log("Bed DateTime: " . $bed->format('Y-m-d H:i:s') . ", Wake DateTime: " . $wake->format('Y-m-d H:i:s'));
 
     // ✅ Chuẩn bị và thực thi câu lệnh
     $stmt = $conn->prepare("

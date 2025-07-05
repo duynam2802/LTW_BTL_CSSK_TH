@@ -31,7 +31,14 @@ try {
 try {
     $stmt = $conn->prepare("
         SELECT id, sleep_date, bedtime, wake_time, 
-               ROUND(TIMESTAMPDIFF(MINUTE, bedtime, wake_time)/60, 1) as duration,
+               ROUND(
+                   CASE 
+                       WHEN wake_time >= bedtime THEN 
+                           TIMESTAMPDIFF(MINUTE, bedtime, wake_time)/60
+                       ELSE 
+                           TIMESTAMPDIFF(MINUTE, bedtime, DATE_ADD(wake_time, INTERVAL 1 DAY))/60
+                   END, 1
+               ) as duration,
                quality, notes
         FROM sleep_logs 
         WHERE user_id = ? 

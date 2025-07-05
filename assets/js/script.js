@@ -237,7 +237,7 @@ function updateDashboardStats(stats) {
     
     if (stats.sleep) {
         document.getElementById('avgSleep').textContent = stats.sleep.average || '--';
-        document.getElementById('sleepQuality').textContent = stats.sleep.quality || 'Đang tải...';
+        document.getElementById('sleepQualityText').textContent = stats.sleep.quality || 'Đang tải...';
     }
 }
 

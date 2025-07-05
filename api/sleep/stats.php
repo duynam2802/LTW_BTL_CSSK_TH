@@ -31,7 +31,14 @@ try {
 
 try {
     $stmt = $conn->prepare("SELECT 
-        AVG(TIMESTAMPDIFF(MINUTE, bedtime, wake_time))/60 AS avg_duration,
+        AVG(
+            CASE 
+                WHEN wake_time >= bedtime THEN 
+                    TIMESTAMPDIFF(MINUTE, bedtime, wake_time)/60
+                ELSE 
+                    TIMESTAMPDIFF(MINUTE, bedtime, DATE_ADD(wake_time, INTERVAL 1 DAY))/60
+            END
+        ) AS avg_duration,
         AVG(quality) AS avg_quality,
         SEC_TO_TIME(AVG(TIME_TO_SEC(bedtime))) AS avg_bedtime,
         SEC_TO_TIME(AVG(TIME_TO_SEC(wake_time))) AS avg_waketime
