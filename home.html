@@ -11,13 +11,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <button class="menu-toggle">☰</button>
+    <div class="logo-text"><img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img" style="width:28px;height:28px;margin-right:6px;vertical-align:middle;"> UTH Health & Fitness</div>
+  </header>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img" style="width:40px;height:40px;margin-right:10px;vertical-align:middle;">
+      <div style="display:inline-block;vertical-align:middle;">
+        <h2 style="display:inline;vertical-align:middle;">UTH Health & Fitness</h2>
+        <div class="sidebar-subtitle sidebar-subtitle-red">Chăm sóc sức khỏe - thể hình</div>
+        <hr class="sidebar-divider">
+      </div>
+      <button class="close-btn">×</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#about">📘 Giới thiệu</a>
+      <a href="#features">⚙️ Tính năng</a>
+      <a href="#benefits">💡 Lợi ích</a>
+      <a href="#facility">🏢 Cơ sở vật chất</a>
+      <a href="UserGuide.html">🏋️ Hướng dẫn phòng tập</a>
+      <hr>
+      <a href="login.html">🔐 Đăng nhập</a>
+      <a href="register.html">📝 Đăng ký</a>
+    </nav>
+  </aside>
+
+  <!-- Desktop Header -->
+  <header class="header desktop-header">
     <div class="header__logo">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:#018486;border-radius:16px;box-shadow:0 2px 8px rgba(1,132,134,0.10);font-size:2rem;">
-        🎓
-      </span>
-      <span class="header__brand">UTH Health & Fitness </span>
+      <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img" style="width:32px;height:32px;margin-right:8px;vertical-align:middle;"> UTH Health & Fitness
     </div>
     <nav class="header__nav">
       <ul class="header__menu">
@@ -247,42 +276,74 @@
     <div class="testimonial__item">
       <img class="testimonial__avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar">
       <div class="testimonial__content">
-        <div class="testimonial__quote">“App rất dễ dùng, mình thích nhất là phần nhắc nhở giờ ngủ và gợi ý thực đơn!”</div>
+        <div class="testimonial__quote">“App rất dễ dùng, mình thích nhất là phần theo dõi sức khỏe và dinh dưỡng!”</div>
         <div class="testimonial__name">Trần Thị Kim Ngân, Khoa CNTT</div>
       </div>
     </div>
   </div>
 </section>
-  <!-- CTA Section -->
-  <script src="./assets/js/script.js"></script>
- 
-</body>
-<!-- Footer Section -->
-<footer class="footer">
-  <div class="footer__container">
-    <div class="footer__brand">
-      <span class="footer__logo">🎓</span>
-      <span class="footer__title">UTH Health & Fitness</span>
-      <p class="footer__desc">Ứng dụng chăm sóc sức khỏe toàn diện cho sinh viên UTH.</p>
-    </div>
-    <div class="footer__contact">
-      <h4>Liên hệ</h4>
-      <p>Trường Đại học Giao thông Vận tải TP.HCM (UTH)</p>
-      <p>Email: UTHFitness@uth.edu.vn</p>
-      <p>Địa chỉ:  số 70, đường Tô Ký, P. Trung Mỹ Tây, TP. HCM (Cơ sở 3)</p>
-    </div>
-    <div class="footer__cta">
-      <h2>Bắt đầu hành trình chăm sóc sức khỏe của bạn!</h2>
-      <div class="cta__actions">
-        <a href="register.html" class="btn btn--primary">Đăng ký ngay</a>
-        <a href="login.html" class="btn btn--outline">Đăng nhập</a>
+  
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__brand">
+        <span class="footer__logo">🎓</span>
+        <span class="footer__title">UTH Health & Fitness</span>
+        <p class="footer__desc">Ứng dụng chăm sóc sức khỏe toàn diện cho sinh viên UTH.</p>
       </div>
-      <p class="cta__desc">Miễn phí 100% cho sinh viên UTH</p>
+      <div class="footer__contact">
+        <h4>Liên hệ</h4>
+        <p>Trường Đại học Giao thông Vận tải TP.HCM (UTH)</p>
+        <p>Email: UTHFitness@uth.edu.vn</p>
+        <p>Địa chỉ: số 70, đường Tô Ký, P. Trung Mỹ Tây, TP. HCM (Cơ sở 3)</p>
+      </div>
+      <div class="footer__cta">
+        <h2>Bắt đầu hành trình chăm sóc sức khỏe của bạn!</h2>
+        <div class="cta__actions">
+          <a href="register.html" class="btn btn--primary">Đăng ký ngay</a>
+          <a href="login.html" class="btn btn--outline">Đăng nhập</a>
+        </div>
+        <p class="cta__desc">Miễn phí 100% cho sinh viên UTH</p>
+      </div>
     </div>
-  </div>
-  <div class="footer__bottom">
-    <span>&copy; 2025 UTH Health & Fitness. Thiết kế bởi nhóm Sinh viên UTH.</span>
-  </div>
-</footer>
-<!-- End Footer Section -->
+    <div class="footer__bottom">
+      <span>&copy; 2025 UTH Health & Fitness. Thiết kế bởi nhóm Sinh viên UTH.</span>
+    </div>
+  </footer>
+
+  <!-- Sidebar JavaScript -->
+  <script>
+    const toggleBtn = document.querySelector('.menu-toggle');
+    const closeBtn = document.querySelector('.close-btn');
+    const sidebar = document.getElementById('sidebar');
+    const authBtns = document.querySelectorAll('.auth-btn');
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+        sidebar.classList.remove('active');
+      }
+    });
+
+    // Handle auth button clicks
+    authBtns[0].addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+
+    authBtns[1].addEventListener('click', () => {
+      window.location.href = 'register.html';
+    });
+  </script>
+
+  <script src="./assets/js/script.js"></script>
+</body>
 </html>
