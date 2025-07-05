@@ -283,12 +283,27 @@ if (!isset($_SESSION['user_id'])) {
 
                     <div class="card">
                         <div class="card-header">
-                            <h3>Bữa ăn hôm nay</h3>
+                            <h3>Lịch sử bữa ăn</h3>
                             <span class="icon">🍽️</span>
                         </div>
-                        <div class="meals-list" id="todayMeals">
-                            <!-- Today's meals will be loaded here -->
-                        </div>
+                     
+            
+                            <!-- filter -->
+                            <div class="history-filter" id="mealHistoryFilter"
+                                style="display: flex; align-items: center; gap: 8px;">
+                                <input type="date" id="filterDate">
+                                <div class="filter-btn-group">
+                                    <button class="filter-btn" id="prevMonthBtn">&#8592;</button>
+                                    <button class="filter-btn" id="currentMonthBtn"><span>&#128197; HIỆN TẠI</span></button>
+                                    <button class="filter-btn" id="nextMonthBtn">&#8594;</button>
+                                </div>
+                            </div>
+
+
+                            <div class="meals-list" id="mealList">
+                                <!-- Today's meals will be loaded here -->
+                            </div>
+                      
                     </div>
 
                 </div>
