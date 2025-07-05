@@ -384,39 +384,44 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
 
                 <div class="sleep-grid">
+                    <!-- Form ghi nhận giấc ngủ -->
                     <div class="card">
                         <div class="card-header">
                             <h3>Ghi nhận giấc ngủ</h3>
                             <span class="icon">➕</span>
                         </div>
-                        <form class="sleep-form" id="sleepForm">
+                        <form class="sleep-form" id="sleepForm" autocomplete="off">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>Giờ đi ngủ</label>
+                                    <label for="bedtime">Giờ đi ngủ</label>
                                     <input type="time" id="bedtime" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Giờ thức dậy</label>
+                                    <label for="wakeTime">Giờ thức dậy</label>
                                     <input type="time" id="wakeTime" required>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Ngày ngủ</label>
+                                <label for="sleepDate">Ngày ngủ</label>
                                 <input type="date" id="sleepDate" required>
                             </div>
                             <div class="form-group">
-                                <label>Chất lượng giấc ngủ: <span id="qualityValue">5</span>/10</label>
-                                <input type="range" min="1" max="10" value="5" id="sleepQuality" class="slider">
+                                <label for="sleepQuality">Chất lượng giấc ngủ:
+                                    <span id="qualityValue">5</span>/10
+                                </label>
+                                <input type="range" min="1" max="10" value="5" id="sleepQuality" class="slider"
+                                    oninput="document.getElementById('qualityValue').textContent = this.value">
                             </div>
                             <div class="form-group">
-                                <label>Ghi chú</label>
-                                <textarea placeholder="Cảm giác khi thức dậy, các yếu tố ảnh hưởng..."
-                                    id="sleepNotes"></textarea>
+                                <label for="sleepNotes">Ghi chú</label>
+                                <textarea id="sleepNotes"
+                                    placeholder="Cảm giác khi thức dậy, các yếu tố ảnh hưởng..."></textarea>
                             </div>
                             <button type="submit" class="btn-primary">Lưu dữ liệu giấc ngủ</button>
                         </form>
                     </div>
 
+                    <!-- Lịch sử giấc ngủ -->
                     <div class="card">
                         <div class="card-header">
                             <h3>Lịch sử giấc ngủ</h3>

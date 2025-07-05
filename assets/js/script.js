@@ -674,31 +674,57 @@ async function deleteWorkout(id) {
 
 
 // Sleep Functions
+// Load dữ liệu giấc ngủ
 async function loadSleepData() {
     try {
         const [stats, history] = await Promise.all([
             apiRequest('sleep/stats.php'),
             apiRequest('sleep/history.php')
         ]);
-        
-        updateSleepStats(stats);
-        updateSleepHistory(history);
+        renderSleepStats(stats);
+        renderSleepHistory(history);
     } catch (error) {
-        console.error('Failed to load sleep data:', error);
+        console.error('❌ Lỗi tải dữ liệu giấc ngủ:', error);
+        showToast('Không thể tải dữ liệu giấc ngủ', 'error');
     }
 }
 
-function updateSleepStats(data) {
+// Hiển thị thống kê giấc ngủ
+function renderSleepStats(data) {
     const container = document.getElementById('sleepStats');
     if (!container) return;
-    
+
     const stats = [
-        { label: 'Trung bình/đêm', value: data.average?.duration || '--', unit: 'giờ', change: '7 ngày qua', icon: '🌙' },
-        { label: 'Chất lượng', value: data.average?.quality || '--', unit: '/10', change: data.average?.qualityText || 'Đang tải...', icon: '📈' },
-        { label: 'Giờ đi ngủ TB', value: data.average?.bedtime || '--', unit: '', change: data.bedtimeAdvice || '', icon: '🕐' },
-        { label: 'Giờ thức dậy TB', value: data.average?.wakeTime || '--', unit: '', change: data.wakeAdvice || '', icon: '☀️' }
+        {
+            label: 'Trung bình/đêm',
+            value: data.average?.duration ?? '--',
+            unit: 'giờ',
+            change: '7 ngày qua',
+            icon: '🌙'
+        },
+        {
+            label: 'Chất lượng',
+            value: data.average?.quality ?? '--',
+            unit: '/10',
+            change: data.average?.qualityText ?? '...',
+            icon: '📈'
+        },
+        {
+            label: 'Giờ đi ngủ TB',
+            value: data.average?.bedtime ?? '--',
+            unit: '',
+            change: data.bedtimeAdvice ?? '',
+            icon: '🕐'
+        },
+        {
+            label: 'Giờ thức dậy TB',
+            value: data.average?.wakeTime ?? '--',
+            unit: '',
+            change: data.wakeAdvice ?? '',
+            icon: '☀️'
+        }
     ];
-    
+
     container.innerHTML = stats.map(stat => `
         <div class="stat-card">
             <div class="stat-content">
@@ -708,7 +734,9 @@ function updateSleepStats(data) {
                         <span class="value">${stat.value}</span>
                         <span class="unit">${stat.unit}</span>
                     </div>
-                    <p class="stat-change ${stat.change.includes('Tốt') || stat.change.includes('Ổn định') ? 'positive' : ''}">${stat.change}</p>
+                    <p class="stat-change ${stat.change.includes('Tốt') || stat.change.includes('Ổn định') ? 'positive' : ''}">
+                        ${stat.change}
+                    </p>
                 </div>
                 <div class="stat-icon">${stat.icon}</div>
             </div>
@@ -716,15 +744,21 @@ function updateSleepStats(data) {
     `).join('');
 }
 
-function updateSleepHistory(history) {
+// Hiển thị lịch sử giấc ngủ
+function renderSleepHistory(history) {
     const container = document.getElementById('sleepHistory');
     if (!container) return;
-    
+
     if (!history.length) {
-        container.innerHTML = '<div class="empty-state"><div class="icon">🌙</div><h3>Chưa có dữ liệu giấc ngủ</h3><p>Thêm dữ liệu giấc ngủ đầu tiên</p></div>';
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">🌙</div>
+                <h3>Chưa có dữ liệu giấc ngủ</h3>
+                <p>Thêm dữ liệu giấc ngủ đầu tiên</p>
+            </div>`;
         return;
     }
-    
+
     container.innerHTML = history.map(sleep => `
         <div class="history-item">
             <div class="history-info">
@@ -739,37 +773,78 @@ function updateSleepHistory(history) {
     `).join('');
 }
 
+// Gửi dữ liệu giấc ngủ mới
 async function handleSleepSubmit(e) {
     e.preventDefault();
-    
+
+    // Lấy các giá trị từ form
+    const bedtime = document.getElementById('bedtime').value;
+    const wakeTime = document.getElementById('wakeTime').value;
+    const sleepDate = document.getElementById('sleepDate').value;
+    const qualityInput = document.getElementById('sleepQuality');
+    const quality = parseInt(qualityInput.value) || 5; // Default to 5 if invalid
+    const notes = document.getElementById('sleepNotes').value;
+
+    console.log('Form values:', {
+        bedtime,
+        wakeTime, 
+        sleepDate,
+        qualityInputValue: qualityInput.value,
+        qualityParsed: quality
+    });
+
+
+    // Validation
+    if (!bedtime || !wakeTime || !sleepDate) {
+        showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
+        return;
+    }
+
+    console.log('Quality validation check:', {
+        quality: quality,
+        type: typeof quality,
+        isNaN: isNaN(quality),
+        lessThan1: quality < 1,
+        greaterThan10: quality > 10
+    });
+
+    if (isNaN(quality) || quality < 1 || quality > 10) {
+        showToast('Chất lượng giấc ngủ phải từ 1 đến 10', 'error');
+        return;
+    }
+
     const formData = {
-        bedtime: document.getElementById('bedtime').value,
-        wakeTime: document.getElementById('wakeTime').value,
-        sleepDate: document.getElementById('sleepDate').value,
-        quality: parseInt(document.getElementById('sleepQuality').value),
-        notes: document.getElementById('sleepNotes').value
+        bedtime: bedtime,
+        wakeTime: wakeTime,
+        sleepDate: sleepDate,
+        quality: quality,
+        notes: notes
     };
-    
+
+    console.log('Sending sleep data:', formData);
+
     try {
-        await apiRequest('sleep/add.php', 'POST', formData);
-        showToast('Đã lưu dữ liệu giấc ngủ thành công!', 'success');
+        const res = await apiRequest('sleep/add.php', 'POST', formData);
+        showToast(res.message || 'Đã lưu dữ liệu giấc ngủ thành công!', 'success');
         document.getElementById('sleepForm').reset();
         loadSleepData();
-        loadDashboardData();
+        loadDashboardData?.();
     } catch (error) {
+        console.error(error);
         showToast('Không thể lưu dữ liệu giấc ngủ', 'error');
     }
 }
-
+// Xóa dữ liệu giấc ngủ
 async function deleteSleep(id) {
     if (!confirm('Bạn có chắc muốn xóa dữ liệu giấc ngủ này?')) return;
-    
+
     try {
         await apiRequest('sleep/delete.php', 'POST', { id });
         showToast('Đã xóa dữ liệu giấc ngủ thành công!', 'success');
         loadSleepData();
-        loadDashboardData();
+        loadDashboardData?.();
     } catch (error) {
+        console.error(error);
         showToast('Không thể xóa dữ liệu giấc ngủ', 'error');
     }
 }
