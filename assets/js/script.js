@@ -249,7 +249,7 @@ function updateWeeklyGoals(goals) {
         <div class="progress-item">
             <div class="progress-info">
                 <span>${goal.name}</span>
-                <span>${goal.current}/${goal.target} ${goal.unit}</span>
+                <span>${goal.current} ${goal.unit}</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: ${goal.percentage}%"></div>
@@ -523,32 +523,57 @@ async function handleNutritionSubmit(e) {
     }
 }
 
-// Workout Functions
+// Tải dữ liệu workout
 async function loadWorkoutData() {
     try {
         const [stats, history] = await Promise.all([
             apiRequest('workouts/stats.php'),
             apiRequest('workouts/history.php')
         ]);
-        
-        updateWorkoutStats(stats);
-        updateWorkoutHistory(history);
+        renderWorkoutStats(stats);
+        renderWorkoutHistory(history);
     } catch (error) {
-        console.error('Failed to load workout data:', error);
+        console.error('❌ Lỗi tải dữ liệu workout:', error);
+        showToast('Không thể tải dữ liệu workout', 'error');
     }
 }
 
-function updateWorkoutStats(data) {
+// Hiển thị thống kê workout
+function renderWorkoutStats(data) {
     const container = document.getElementById('workoutStats');
     if (!container) return;
-    
+
     const stats = [
-        { label: 'Tuần này', value: `${data.thisWeek?.count || 0}/5`, unit: 'buổi', change: `${data.thisWeek?.percentage || 0}% hoàn thành`, icon: '💪' },
-        { label: 'Calo đốt', value: data.thisWeek?.calories || '--', unit: 'kcal', change: 'Tuần này', icon: '🔥' },
-        { label: 'Thời gian tập', value: data.thisWeek?.duration || '--', unit: 'giờ', change: 'Tuần này', icon: '⏱️' },
-        { label: 'Chuỗi ngày', value: data.streak || '--', unit: 'ngày', change: 'Streak hiện tại', icon: '✅' }
+        {
+            label: 'Tuần này',
+            value: `${data.thisWeek?.count ?? 0}/5`,
+            unit: 'buổi',
+            change: `${data.thisWeek?.percentage ?? 0}% hoàn thành`,
+            icon: '💪'
+        },
+        {
+            label: 'Calo đốt',
+            value: data.thisWeek?.calories ?? '--',
+            unit: 'kcal',
+            change: 'Tuần này',
+            icon: '🔥'
+        },
+        {
+            label: 'Thời gian tập',
+            value: data.thisWeek?.duration ?? '--',
+            unit: 'giờ',
+            change: 'Tuần này',
+            icon: '⏱️'
+        },
+        {
+            label: 'Chuỗi ngày',
+            value: data.streak ?? '--',
+            unit: 'ngày',
+            change: 'Streak hiện tại',
+            icon: '✅'
+        }
     ];
-    
+
     container.innerHTML = stats.map(stat => `
         <div class="stat-card">
             <div class="stat-content">
@@ -566,15 +591,21 @@ function updateWorkoutStats(data) {
     `).join('');
 }
 
-function updateWorkoutHistory(history) {
+// Hiển thị lịch sử workout
+function renderWorkoutHistory(history) {
     const container = document.getElementById('workoutHistory');
     if (!container) return;
-    
+
     if (!history.length) {
-        container.innerHTML = '<div class="empty-state"><div class="icon">💪</div><h3>Chưa có buổi tập</h3><p>Thêm buổi tập đầu tiên của bạn</p></div>';
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">💪</div>
+                <h3>Chưa có buổi tập</h3>
+                <p>Thêm buổi tập đầu tiên của bạn</p>
+            </div>`;
         return;
     }
-    
+
     container.innerHTML = history.map(workout => `
         <div class="history-item">
             <div class="history-info">
@@ -589,6 +620,7 @@ function updateWorkoutHistory(history) {
     `).join('');
 }
 
+// Map loại bài tập sang tiếng Việt
 function getWorkoutTypeName(type) {
     const types = {
         cardio: 'Cardio',
@@ -601,40 +633,45 @@ function getWorkoutTypeName(type) {
     return types[type] || type;
 }
 
+// Gửi dữ liệu buổi tập mới
 async function handleWorkoutSubmit(e) {
     e.preventDefault();
-    
+
     const formData = {
         workoutType: document.getElementById('workoutType').value,
         duration: parseInt(document.getElementById('workoutDuration').value),
-        caloriesBurned: parseInt(document.getElementById('workoutCalories').value),
+        caloriesBurned: parseInt(document.getElementById('workoutCalories').value) || 0,
         workoutDate: document.getElementById('workoutDate').value,
-        notes: document.getElementById('workoutNotes').value
+        notes: document.getElementById('workoutNotes').value.trim()
     };
-    
+
     try {
-        await apiRequest('workouts/add.php', 'POST', formData);
-        showToast('Đã lưu buổi tập thành công!', 'success');
+        const res = await apiRequest('workouts/add.php', 'POST', formData);
+        showToast(res.message || 'Đã lưu buổi tập thành công!', 'success');
         document.getElementById('workoutForm').reset();
         loadWorkoutData();
-        loadDashboardData();
+        loadDashboardData?.(); // Optional chaining nếu không có dashboard
     } catch (error) {
+        console.error(error);
         showToast('Không thể lưu buổi tập', 'error');
     }
 }
 
+// Xóa buổi tập
 async function deleteWorkout(id) {
     if (!confirm('Bạn có chắc muốn xóa buổi tập này?')) return;
-    
+
     try {
         await apiRequest('workouts/delete.php', 'POST', { id });
         showToast('Đã xóa buổi tập thành công!', 'success');
         loadWorkoutData();
-        loadDashboardData();
+        loadDashboardData?.();
     } catch (error) {
+        console.error(error);
         showToast('Không thể xóa buổi tập', 'error');
     }
 }
+
 
 // Sleep Functions
 async function loadSleepData() {

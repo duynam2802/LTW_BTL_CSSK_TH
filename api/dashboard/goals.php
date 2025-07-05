@@ -28,14 +28,12 @@ try {
         $currentWeight = $weights[0]['weight'];
         $previousWeight = $weights[1]['weight'];
         $weightLoss = $previousWeight - $currentWeight;
-        $targetLoss = 2.0; // 2kg target
         
         $goals[] = [
-            'name' => 'Giảm cân',
-            'current' => round($weightLoss, 1),
-            'target' => $targetLoss,
+            'name' => 'Cân nặng thay đổi',
+            'current' => ($weightLoss > 0 ? '+' : '') . round($weightLoss, 1),
             'unit' => 'kg',
-            'percentage' => min(100, round(($weightLoss / $targetLoss) * 100))
+            'percentage' => min(100, round(($weightLoss/100) * 100))
         ];
     }
     
@@ -56,14 +54,14 @@ try {
         'percentage' => min(100, round(($workoutCount / 5) * 100))
     ];
     
-    // Water intake goal (example)
-    $goals[] = [
-        'name' => 'Uống nước',
-        'current' => 1.8,
-        'target' => 2.5,
-        'unit' => 'L',
-        'percentage' => 72
-    ];
+    // calo intake goal (example)
+    // $goals[] = [
+    //     'name' => 'Uống nước',
+    //     'current' => 1.8,
+    //     'target' => 2.5,
+    //     'unit' => 'L',
+    //     'percentage' => 72
+    // ];
     
     echo json_encode($goals);
     

@@ -301,11 +301,13 @@ if (!isset($_SESSION['user_id'])) {
                     <p>Quản lý và theo dõi các buổi tập luyện</p>
                 </div>
 
+                <!-- Stats hiển thị thông tin tổng quan -->
                 <div class="stats-grid" id="workoutStats">
                     <!-- Workout stats will be loaded here -->
                 </div>
 
                 <div class="workouts-grid">
+                    <!-- Form thêm buổi tập -->
                     <div class="card">
                         <div class="card-header">
                             <h3>Thêm buổi tập</h3>
@@ -313,9 +315,9 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
                         <form class="workout-form" id="workoutForm">
                             <div class="form-group">
-                                <label>Loại bài tập</label>
+                                <label for="workoutType">Loại bài tập</label>
                                 <select id="workoutType" required>
-                                    <option value="">Chọn loại bài tập</option>
+                                    <option value="">-- Chọn loại bài tập --</option>
                                     <option value="cardio">Cardio</option>
                                     <option value="strength">Tập tạ</option>
                                     <option value="yoga">Yoga</option>
@@ -324,28 +326,35 @@ if (!isset($_SESSION['user_id'])) {
                                     <option value="cycling">Đạp xe</option>
                                 </select>
                             </div>
+
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>Thời gian (phút)</label>
-                                    <input type="number" placeholder="30" id="workoutDuration" required>
+                                    <label for="workoutDuration">Thời gian (phút)</label>
+                                    <input type="number" id="workoutDuration" placeholder="30" min="1" required>
                                 </div>
+
+                                <!-- Đã bỏ bắt buộc nhập calo -->
                                 <div class="form-group">
-                                    <label>Calo đốt (kcal)</label>
-                                    <input type="number" placeholder="300" id="workoutCalories" required>
+                                    <label for="workoutCalories">Calo đốt (tuỳ chọn)</label>
+                                    <input type="number" id="workoutCalories" placeholder="Tự động tính">
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <label>Ngày tập</label>
+                                <label for="workoutDate">Ngày tập</label>
                                 <input type="date" id="workoutDate" required>
                             </div>
+
                             <div class="form-group">
-                                <label>Ghi chú</label>
-                                <textarea placeholder="Cảm giác sau khi tập..." id="workoutNotes"></textarea>
+                                <label for="workoutNotes">Ghi chú</label>
+                                <textarea id="workoutNotes" placeholder="Cảm giác sau khi tập..."></textarea>
                             </div>
+
                             <button type="submit" class="btn-primary">Lưu buổi tập</button>
                         </form>
                     </div>
 
+                    <!-- Lịch sử buổi tập -->
                     <div class="card">
                         <div class="card-header">
                             <h3>Lịch sử tập luyện</h3>
@@ -357,6 +366,7 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </section>
+
 
             <!-- Sleep Section -->
             <section id="sleep" class="content-section">
