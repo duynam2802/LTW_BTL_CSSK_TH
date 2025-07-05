@@ -903,7 +903,7 @@ async function logout() {
     
     try {
         await apiRequest('auth/logout.php', 'POST');
-        window.location.href = 'login.html';
+        window.location.href = 'index.php';
     } catch (error) {
         showToast('Không thể đăng xuất', 'error');
     }
