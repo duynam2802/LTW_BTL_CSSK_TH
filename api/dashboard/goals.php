@@ -25,17 +25,21 @@ try {
     
     $weights = $weightStmt->fetchAll(PDO::FETCH_ASSOC);
     if (count($weights) >= 2) {
-        $currentWeight = $weights[0]['weight'];
-        $previousWeight = $weights[1]['weight'];
-        $weightLoss = $previousWeight - $currentWeight;
-        
-        $goals[] = [
-            'name' => 'Cân nặng thay đổi',
-            'current' => ($weightLoss > 0 ? '+' : '') . round($weightLoss, 1),
-            'unit' => 'kg',
-            'percentage' => min(100, round(($weightLoss/100) * 100))
-        ];
-    }
+    $currentWeight = $weights[0]['weight'];
+    $previousWeight = $weights[1]['weight'];
+    $weightLoss = round($previousWeight - $currentWeight, 1);
+
+    $sign = $weightLoss > 0 ? '-' : ($weightLoss < 0 ? '+' : '±');
+    $change = abs($weightLoss); // giá trị tuyệt đối để không hiển thị trùng dấu
+
+    $goals[] = [
+        'name' => 'Cân nặng thay đổi',
+        'current' => $sign . $change,
+        'unit' => 'kg',
+        'percentage' => min(100, round(abs($weightLoss) / 100 * 100)) // tính theo tuyệt đối
+    ];
+}
+
     
     // Workout goal
     $workoutQuery = "SELECT COUNT(*) as count FROM workout_logs WHERE user_id = :user_id AND YEARWEEK(workout_date) = YEARWEEK(NOW())";
