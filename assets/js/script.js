@@ -1299,13 +1299,19 @@ if (profileForm) {
 }
 
 // Form cập nhật mục tiêu cá nhân
+// ...existing code...
 const goalForm = document.getElementById('goalForm');
 if (goalForm) {
   goalForm.addEventListener('submit', async function(e) {
     e.preventDefault();
+    // Lấy giá trị và loại mục tiêu cân nặng
+    const weightValue = parseFloat(document.getElementById('weightGoalValue').value) || null;
+    const weightType = document.getElementById('weightGoalType')?.value || 'up'; // 'up' hoặc 'down'
+    // Xử lý số dương/âm theo loại mục tiêu
+    const weightGoal = weightType === 'up' ? Math.abs(weightValue) : -Math.abs(weightValue);
+
     const formData = {
-    //   weightGoal: parseFloat(document.getElementById('weightGoal').value) || null,
-      weightGoal: parseFloat(document.getElementById('weightGoalValue').value) || null,
+      weightGoal: weightGoal,
       workoutGoal: parseInt(document.getElementById('workoutGoal').value) || null,
       calorieGoal: parseInt(document.getElementById('calorieGoalInput').value) || null
     };
@@ -1318,6 +1324,7 @@ if (goalForm) {
     }
   });
 }
+// ...existing code...
 
 // Khi chuyển sang tab Hồ sơ, tự động load dữ liệu
 const navProfile = document.querySelector('[data-section="profile"]');
@@ -1971,3 +1978,4 @@ function toggleAlertDetails(button) {
         button.classList.remove('expanded');
     }
 }
+
