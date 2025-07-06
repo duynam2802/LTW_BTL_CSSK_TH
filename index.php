@@ -19,7 +19,6 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="assets/css/toast.css">
-    <link rel="stylesheet" href="assets/css/all.min.css">
 
 
 </head>
@@ -437,32 +436,47 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Alert Section -->
             <section id="alert" class="content-section alert-section">
                 <div class="section-header">
-                    <h2>Cảnh báo & Gợi ý</h2>
-                    <p>Thông tin tổng hợp từ các chỉ số sức khỏe gần đây</p>
+                    <h2>🚨 Cảnh báo & Gợi ý Sức khỏe</h2>
+                    <p>Phân tích thông minh từ các chỉ số sức khỏe của bạn</p>
+                </div>
+
+                <!-- Alert Summary Cards -->
+                <div class="alert-summary-grid">
+                    <div class="summary-card warning">
+                        <div class="summary-icon">⚠️</div>
+                        <div class="summary-content">
+                            <h3 id="warningCount">0</h3>
+                            <p>Cần chú ý</p>
+                        </div>
+                    </div>
+                    <div class="summary-card info">
+                        <div class="summary-icon">ℹ️</div>
+                        <div class="summary-content">
+                            <h3 id="infoCount">0</h3>
+                            <p>Thông tin</p>
+                        </div>
+                    </div>
+                    <div class="summary-card success">
+                        <div class="summary-icon">✅</div>
+                        <div class="summary-content">
+                            <h3 id="successCount">0</h3>
+                            <p>Thành tích</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="alert-container">
-                    <div class="alert-grid">
-                        <div class="alert-card" id="healthAlert">
-                            <h4>🩺 Sức khỏe tổng thể</h4>
-                            <p>⚠️ Bạn đang thiếu ngủ và nạp quá ít năng lượng so với nhu cầu.</p>
+                    <div class="alert-header">
+                        <h3>📋 Chi tiết cảnh báo</h3>
+                        <div class="alert-filters">
+                            <button class="filter-btn active" data-filter="all">Tất cả</button>
+                            <button class="filter-btn" data-filter="warning">Cần chú ý</button>
+                            <button class="filter-btn" data-filter="info">Thông tin</button>
+                            <button class="filter-btn" data-filter="success">Thành tích</button>
                         </div>
-
-                        <div class="alert-card" id="dietAlert">
-                            <h4>🍽️ Ăn uống</h4>
-                            <p>📉 Lượng calo hôm nay thấp hơn nhu cầu tối thiểu 500 kcal.</p>
-                        </div>
-
-                        <div class="alert-card" id="exerciseAlert">
-                            <h4>💪 Luyện tập</h4>
-                            <p>🏃‍♂️ Bạn chưa ghi nhận bất kỳ hoạt động thể chất nào trong 3 ngày qua.</p>
-                        </div>
-
-                        <div class="alert-card" id="sleepAlert">
-                            <h4>🌙 Giấc ngủ</h4>
-                            <p>😴 Chất lượng giấc ngủ gần đây dưới 6/10 — nên điều chỉnh giờ đi ngủ và hạn chế dùng
-                                thiết bị điện tử.</p>
-                        </div>
+                    </div>
+                    <div class="alert-grid" id="alertGrid">
+                        <!-- Alerts will be loaded dynamically -->
                     </div>
                 </div>
             </section>

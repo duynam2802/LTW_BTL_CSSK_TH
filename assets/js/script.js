@@ -136,6 +136,9 @@ function showSection(sectionId) {
             case 'sleep':
                 loadSleepData();
                 break;
+            case 'alert':
+                loadAlertData();
+                break;
             case 'profile':
                 loadProfileData();
                 break;
@@ -1240,3 +1243,118 @@ async function loadNutritionHistoryChart() {
 
 // Gọi khi trang tải hoặc sau khi thêm món ăn
 loadNutritionHistoryChart();
+
+// Alert Functions
+async function loadAlertData() {
+    try {
+        const alertData = await apiRequest('alert/today.php');
+        renderAlerts(alertData.alerts);
+        updateAlertSummary(alertData.alerts);
+        setupAlertFilters();
+    } catch (error) {
+        console.error('❌ Lỗi tải dữ liệu cảnh báo:', error);
+        showToast('Không thể tải dữ liệu cảnh báo', 'error');
+    }
+}
+
+function renderAlerts(alerts) {
+    const container = document.getElementById('alertGrid');
+    if (!container) return;
+
+    if (!alerts || !alerts.length) {
+        container.innerHTML = `
+            <div class="alert-empty">
+                <div class="icon">🎉</div>
+                <h3>Tuyệt vời!</h3>
+                <p>Tất cả chỉ số sức khỏe của bạn đều trong mức tốt.</p>
+            </div>`;
+        return;
+    }
+
+    container.innerHTML = alerts.map(alert => `
+        <div class="alert-card ${alert.severity}" data-severity="${alert.severity}">
+            <div class="alert-header">
+                <h4>${alert.icon} ${alert.title}</h4>
+                <button class="expand-btn" onclick="toggleAlertDetails(this)">
+                    <span class="expand-icon">▼</span>
+                </button>
+            </div>
+            <p class="alert-message">${alert.message}</p>
+            <div class="alert-details" style="display: none;">
+                ${alert.description ? `<div class="alert-description">
+                    <h5>📋 Mô tả</h5>
+                    <p>${alert.description}</p>
+                </div>` : ''}
+                ${alert.advice && alert.advice.length > 0 ? `<div class="alert-advice">
+                    <h5>💡 Lời khuyên</h5>
+                    <ul>
+                        ${alert.advice.map(advice => `<li>${advice}</li>`).join('')}
+                    </ul>
+                </div>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateAlertSummary(alerts) {
+    const warningCount = document.getElementById('warningCount');
+    const infoCount = document.getElementById('infoCount');
+    const successCount = document.getElementById('successCount');
+    
+    if (!alerts || !alerts.length) {
+        warningCount.textContent = '0';
+        infoCount.textContent = '0';
+        successCount.textContent = '0';
+        return;
+    }
+    
+    const summary = {
+        warning: alerts.filter(a => a.severity === 'warning').length,
+        info: alerts.filter(a => a.severity === 'info').length,
+        success: alerts.filter(a => a.severity === 'success').length
+    };
+    
+    warningCount.textContent = summary.warning;
+    infoCount.textContent = summary.info;
+    successCount.textContent = summary.success;
+}
+
+function setupAlertFilters() {
+    const filterBtns = document.querySelectorAll('.alert-filters .filter-btn');
+    const alertCards = document.querySelectorAll('.alert-card');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Update active button
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter alerts
+            alertCards.forEach(card => {
+                if (filter === 'all' || card.dataset.severity === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
+function toggleAlertDetails(button) {
+    const alertCard = button.closest('.alert-card');
+    const details = alertCard.querySelector('.alert-details');
+    const expandIcon = button.querySelector('.expand-icon');
+    
+    if (details.style.display === 'none') {
+        details.style.display = 'block';
+        expandIcon.textContent = '▲';
+        button.classList.add('expanded');
+    } else {
+        details.style.display = 'none';
+        expandIcon.textContent = '▼';
+        button.classList.remove('expanded');
+    }
+}

@@ -52,7 +52,7 @@ try {
     ];
     
     // Workouts this week
-    $workoutsQuery = "SELECT COUNT(*) as count FROM workout_logs WHERE user_id = :user_id AND YEARWEEK(workout_date) = YEARWEEK(NOW())";
+    $workoutsQuery = "SELECT COUNT(*) as count FROM workout_logs WHERE user_id = :user_id AND YEARWEEK(workout_date, 1) = YEARWEEK(CURDATE(), 1)";
     $workoutsStmt = $db->prepare($workoutsQuery);
     $workoutsStmt->bindParam(':user_id', $userId);
     $workoutsStmt->execute();
@@ -65,7 +65,12 @@ try {
     ];
     
     // Sleep average
-    $sleepQuery = "SELECT AVG(TIMESTAMPDIFF(HOUR, bedtime, wake_time)) as avg_duration FROM sleep_logs WHERE user_id = :user_id AND sleep_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+    $sleepQuery = "SELECT AVG(
+        CASE 
+            WHEN wake_time >= bedtime THEN TIMESTAMPDIFF(MINUTE, bedtime, wake_time)/60
+            ELSE TIMESTAMPDIFF(MINUTE, bedtime, DATE_ADD(wake_time, INTERVAL 1 DAY))/60
+        END
+    ) as avg_duration FROM sleep_logs WHERE user_id = :user_id AND sleep_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
     $sleepStmt = $db->prepare($sleepQuery);
     $sleepStmt->bindParam(':user_id', $userId);
     $sleepStmt->execute();
