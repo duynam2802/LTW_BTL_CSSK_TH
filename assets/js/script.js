@@ -289,7 +289,7 @@ async function loadHealthData() {
         // Filter tháng/năm
         const monthInput = document.getElementById('filterMonthYear');
         const prevBtn = document.getElementById('prevMonthBtn');
-        const nextBtn = document.getElementById('nextMonthBtn');
+        const nextBtn = document.getElementById('nextBtn');
         const nowBtn = document.getElementById('currentMonthBtn');
 
         // Set mặc định là tháng hiện tại
@@ -424,18 +424,99 @@ async function handleHealthSubmit(e) {
 // Nutrition Functions
 async function loadNutritionData() {
     try {
-        const [stats, meals, history] = await Promise.all([
+        const [stats, meals, history, fullHistory] = await Promise.all([
             apiRequest('nutrition/stats.php'),
             apiRequest('nutrition/today.php'),
-            apiRequest('nutrition/history.php') // <- thêm dòng này
+            apiRequest('nutrition/history.php'),
+            apiRequest('nutrition/full_history.php'),
         ]);
+
+        // console.log("History from API:", history);
+        console.log("✅ Full History:", fullHistory);
+
+
         
         updateNutritionStats(stats);
-        updateTodayMeals(meals);
-        renderMacroLineChart(history); // <- vẽ biểu đồ từ dữ liệu lịch sử
+        nutritionHistoryRaw = fullHistory; // Lưu toàn bộ lịch sử bữa ăn (nếu API trả về meals là toàn bộ lịch sử, nếu không hãy dùng history)
+        updateTodayMeals(filterMealsByDate(nutritionHistoryRaw, getTodayStr())); // Hiển thị mặc định hôm nay
+        renderMacroLineChart(history);
     } catch (error) {
         console.error('Failed to load nutrition data:', error);
     }
+
+    // Filter theo ngày
+    const dateInput = document.querySelector('#mealHistoryFilter input[type="date"]');
+    const prevBtn = document.querySelector('#mealHistoryFilter .filter-btn-group .filter-btn:nth-child(1)');
+    const nowBtn = document.querySelector('#mealHistoryFilter .filter-btn-group .filter-btn:nth-child(2)');
+    const nextBtn = document.querySelector('#mealHistoryFilter .filter-btn-group .filter-btn:nth-child(3)');
+
+    function getTodayStr() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+
+    function filterMealsByDate(meals, dateStr) {
+    return (meals || []).filter(item => {
+        const raw = item.created_at;
+
+        // Bỏ qua nếu không có ngày hoặc là ngày mặc định sai
+        if (!raw || raw === "0000-00-00 00:00:00") return false;
+
+        try {
+            const iso = raw.trim().replace(' ', 'T');
+            const d = new Date(iso);
+
+            if (isNaN(d.getTime())) {
+                console.warn("❌ Lỗi parse date:", raw);
+                return false;
+            }
+
+            const dStr = d.toISOString().split('T')[0];
+            return dStr === dateStr;
+        } catch (e) {
+            console.error("❌ Lỗi trong filterMealsByDate:", e);
+            return false;
+        }
+    });
+
+
+
+}
+
+
+    function updateMealsByInput() {
+        const selectedDate = dateInput.value;
+        updateTodayMeals(filterMealsByDate(nutritionHistoryRaw, selectedDate));
+    }
+
+    // Set mặc định là hôm nay
+    if (dateInput) dateInput.value = getTodayStr();
+
+    if (dateInput) dateInput.addEventListener('change', updateMealsByInput);
+
+    if (prevBtn) prevBtn.onclick = function() {
+        let d = new Date(dateInput.value);
+        d.setDate(d.getDate() - 1);
+        dateInput.value = d.toISOString().split('T')[0];
+        updateMealsByInput();
+    };
+    if (nextBtn) nextBtn.onclick = function() {
+        let d = new Date(dateInput.value);
+        d.setDate(d.getDate() + 1);
+        dateInput.value = d.toISOString().split('T')[0];
+        updateMealsByInput();
+    };
+    if (nowBtn) nowBtn.onclick = function() {
+        dateInput.value = getTodayStr();
+        updateMealsByInput();
+    };
+
+    // Hiển thị mặc định hôm nay khi load
+    updateMealsByInput();
 }
 
 
@@ -468,44 +549,53 @@ function updateNutritionStats(data) {
 }
 
 function updateTodayMeals(meals) {
-    const container = document.getElementById('todayMeals');
+    const container = document.getElementById('mealList');
     if (!container) return;
-    
-    if (!meals.length) {
-        container.innerHTML = '<div class="empty-state"><div class="icon">🍽️</div><h3>Chưa có bữa ăn</h3><p>Thêm món ăn đầu tiên của bạn</p></div>';
+
+    if (!meals || meals.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">🍽️</div>
+                <h3>Chưa có bữa ăn</h3>
+                <p>Thêm món ăn đầu tiên của bạn</p>
+            </div>`;
         return;
     }
-    
+
+    // Định nghĩa các bữa ăn
     const mealTypes = {
         breakfast: { name: '🌅 Bữa sáng', items: [] },
-        lunch: { name: '☀️ Bữa trưa', items: [] },
-        dinner: { name: '🌙 Bữa tối', items: [] },
-        snack: { name: '🍎 Ăn vặt', items: [] }
+        lunch:     { name: '☀️ Bữa trưa', items: [] },
+        dinner:    { name: '🌙 Bữa tối', items: [] },
+        snack:     { name: '🍎 Ăn vặt', items: [] },
+        unknown:   { name: '❓ Không rõ bữa', items: [] }, // fallback
     };
-    
+
     meals.forEach(meal => {
-        if (mealTypes[meal.meal_type]) {
-            mealTypes[meal.meal_type].items.push(meal);
-        }
+        const type = meal.meal_type || 'unknown';
+        if (!mealTypes[type]) mealTypes[type] = { name: `❓ ${type}`, items: [] };
+        mealTypes[type].items.push(meal);
     });
-    
+
+    // Render từng nhóm bữa ăn
     container.innerHTML = Object.entries(mealTypes)
-        .filter(([type, data]) => data.items.length > 0)
-        .map(([type, data]) => {
-            const totalCalories = data.items.reduce((sum, item) => sum + parseInt(item.calories), 0);
+        .filter(([_, data]) => data.items.length > 0)
+        .map(([_, data]) => {
+            const totalCalories = data.items.reduce((sum, item) => sum + parseInt(item.calories || 0), 0);
             return `
                 <div class="meal-section">
                     <h4>${data.name} <span class="meal-calories">${totalCalories} kcal</span></h4>
                     ${data.items.map(item => `
                         <div class="food-item">
-                            <span>${item.food_name} (Tổng khối lượng : ${item.quantity}g)</span>
-                            <span>${item.calories} kcal</span>
+                            <span>${item.food_name || 'Không rõ món'} (Tổng khối lượng: ${item.quantity || 0}g)</span>
+                            <span>${item.calories || 0} kcal</span>
                         </div>
                     `).join('')}
                 </div>
             `;
         }).join('');
 }
+
 
 async function handleNutritionSubmit(e) {
     e.preventDefault();

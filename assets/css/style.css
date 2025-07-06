@@ -1432,7 +1432,8 @@ textarea {
     /* Màu chữ */
 }
 
-.health-history {
+.health-history,
+.meal-history {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -1440,7 +1441,7 @@ textarea {
     overflow-y: auto;
 }
 
-#healthHistoryFilter .filter-btn {
+.filter-btn {
     background: var(--primary-color);
     color: #fff;
     border: none;
@@ -1455,12 +1456,13 @@ textarea {
 
 /* #healthHistoryFilter .filter-btn.active, */
 
-#healthHistoryFilter .filter-btn:hover {
+.filter-btn:hover {
     background-color: rgb(0, 107, 137);
     transform: translateY(-2px);
 }
 
-#healthHistoryFilter input[type="month"] {
+#healthHistoryFilter input[type="month"],
+#mealHistoryFilter input[type="date"] {
     border: 2px solid var(--primary-color);
     border-radius: 8px;
     padding: 8px 12px;
@@ -1481,7 +1483,8 @@ textarea {
     gap: 8px;
 }
 
-#filterMonthYear {
+#filterMonthYear,
+#filterDate {
     padding: 6px 12px;
     border-radius: 8px;
     border: 2px solid var(--primary-color);
