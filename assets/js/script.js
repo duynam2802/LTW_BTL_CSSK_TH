@@ -1142,8 +1142,24 @@ function updateProfileInfo(data) {
 }
 
 function populateProfileForm(data) {
-    if (data.age) document.getElementById('age').value = data.age;
+    if (data.full_name) document.getElementById('fullName').value = data.full_name;
+    if (data.age !== undefined && data.age !== null) document.getElementById('age').value = data.age;
     if (data.gender) document.getElementById('gender').value = data.gender;
+}
+
+function populateGoalForm(goals) {
+    // Tìm mục tiêu từng loại
+    const weightGoal = goals.find(g => g.name === 'Cân nặng');
+    const workoutGoal = goals.find(g => g.name === 'Bài tập');
+    const calorieGoal = goals.find(g => g.name === 'Calo');
+    if (weightGoal) document.getElementById('weightGoalValue').value = weightGoal.target || '';
+    if (workoutGoal) document.getElementById('workoutGoal').value = workoutGoal.target || '';
+    if (calorieGoal) document.getElementById('calorieGoalInput').value = calorieGoal.target || '';
+}
+
+function updateProfileName(name) {
+    const nameEls = [document.getElementById('profileName'), document.getElementById('userName')];
+    nameEls.forEach(el => { if (el) el.textContent = name; });
 }
 
 function getGenderText(gender) {
@@ -1173,6 +1189,142 @@ async function handleProfileSubmit(e) {
         showToast('Không thể cập nhật thông tin', 'error');
     }
 }
+
+// ==== PROFILE SECTION JS REWORKED ====
+
+// Load toàn bộ dữ liệu profile khi vào tab Hồ sơ
+async function loadFullProfile() {
+  showLoading();
+  try {
+    const [profile, health, workout, goals, activities] = await Promise.all([
+      apiRequest('profile/get.php'),
+      apiRequest('health/stats.php'),
+      apiRequest('workouts/stats.php'),
+      apiRequest('dashboard/goals.php'),
+      apiRequest('dashboard/activities.php')
+    ]);
+    renderProfileInfo(profile, health, workout);
+    renderProfileAchievements(health, workout);
+    renderGoalList(goals);
+    renderRecentActivities(activities);
+    populateProfileForm(profile);
+    updateProfileName(profile.full_name);
+    populateGoalForm(goals);
+  } catch (err) {
+    showToast('Không thể tải dữ liệu hồ sơ', 'error');
+    console.error('Error loading full profile:', err);
+  } finally {
+    hideLoading();
+  }
+}
+
+function renderProfileInfo(profile, health, workout) {
+  const container = document.getElementById('profileInfo');
+  if (!container) return;
+  const info = [
+    { label: 'Tuổi', value: profile.age ? `${profile.age} tuổi` : 'Chưa cập nhật' },
+    { label: 'Giới tính', value: getGenderText(profile.gender) },
+    { label: 'Chiều cao', value: health?.bmi ? `${health.bmi.value ? health.bmi.value * 100 / (profile.bmi ? profile.bmi : 1) : '--'} cm` : (profile.height ? `${profile.height} cm` : 'Chưa cập nhật') },
+    { label: 'Cân nặng', value: health?.weight ? `${health.weight.current} kg` : (profile.current_weight ? `${profile.current_weight} kg` : 'Chưa cập nhật') },
+    { label: 'BMI', value: health?.bmi ? health.bmi.value : (profile.bmi ? profile.bmi : 'Chưa tính được'), class: health?.bmi ? 'positive' : '' }
+  ];
+  container.innerHTML = info.map(item => `
+    <div class="info-item">
+      <span>${item.label}:</span>
+      <span class="${item.class || ''}">${item.value}</span>
+    </div>
+  `).join('');
+}
+
+function renderProfileAchievements(health, workout) {
+  const container = document.getElementById('profileAchievements');
+  if (!container) return;
+  const achievements = [];
+  // Thành tích cân nặng
+  if (health?.weight?.change) {
+    achievements.push(`<div class="achievement"><span class="icon">⚖️</span> <span>${health.weight.change}</span></div>`);
+  }
+  // Thành tích streak tập luyện
+  if (workout?.streak) {
+    achievements.push(`<div class="achievement"><span class="icon">🔥</span> <span>Chuỗi tập liên tiếp: <b>${workout.streak}</b> ngày</span></div>`);
+  }
+  // Thành tích BMI
+  if (health?.bmi?.status) {
+    achievements.push(`<div class="achievement"><span class="icon">📊</span> <span>BMI: <b>${health.bmi.value}</b> (${health.bmi.status})</span></div>`);
+  }
+  container.innerHTML = achievements.length ? achievements.join('') : '<div class="achievement"><span>Chưa có thành tích nổi bật</span></div>';
+}
+
+function renderGoalList(goals) {
+  const container = document.getElementById('goalList');
+  if (!container) return;
+  container.innerHTML = goals.map(goal => `
+    <div class="goal-item">
+      <span>${goal.name}</span>
+      <span class="goal-status">${goal.current} / ${goal.target} ${goal.unit} (${goal.percentage}%)</span>
+    </div>
+  `).join('');
+}
+
+function renderRecentActivities(activities) {
+ 
+}
+
+// Gợi ý hoạt động giảm stress (hiện đã có sẵn HTML, chỉ cần hiệu ứng click)
+document.querySelectorAll('.activity-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    showToast('Hãy dành thời gian cho bản thân và thư giãn nhé!');
+  });
+});
+
+// Form cập nhật thông tin cá nhân
+const profileForm = document.getElementById('profileForm');
+if (profileForm) {
+  profileForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = {
+      fullName: document.getElementById('fullName').value,
+      age: parseInt(document.getElementById('age').value) || null,
+      gender: document.getElementById('gender').value
+    };
+    try {
+      await apiRequest('profile/update.php', 'POST', formData);
+      showToast('Đã cập nhật thông tin thành công!', 'success');
+      updateProfileName(formData.fullName);
+      loadFullProfile();
+    } catch (error) {
+      showToast('Không thể cập nhật thông tin', 'error');
+    }
+  });
+}
+
+// Form cập nhật mục tiêu cá nhân
+const goalForm = document.getElementById('goalForm');
+if (goalForm) {
+  goalForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = {
+    //   weightGoal: parseFloat(document.getElementById('weightGoal').value) || null,
+      weightGoal: parseFloat(document.getElementById('weightGoalValue').value) || null,
+      workoutGoal: parseInt(document.getElementById('workoutGoal').value) || null,
+      calorieGoal: parseInt(document.getElementById('calorieGoalInput').value) || null
+    };
+    try {
+      await apiRequest('goals/update.php', 'POST', formData);
+      showToast('Đã cập nhật mục tiêu cá nhân!', 'success');
+      loadFullProfile();
+    } catch (error) {
+      showToast('Không thể cập nhật mục tiêu', 'error');
+    }
+  });
+}
+
+// Khi chuyển sang tab Hồ sơ, tự động load dữ liệu
+const navProfile = document.querySelector('[data-section="profile"]');
+if (navProfile) {
+  navProfile.addEventListener('click', loadFullProfile);
+}
+// ==== END PROFILE SECTION JS REWORKED ====
 
 // Utility Functions
 function formatDate(dateString) {

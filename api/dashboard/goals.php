@@ -14,61 +14,69 @@ try {
     $database = new Database();
     $db = $database->getConnection();
     $userId = $_SESSION['user_id'];
-    
     $goals = [];
-    
-    // Weight loss goal (example)
-    $weightQuery = "SELECT weight FROM health_records WHERE user_id = :user_id ORDER BY measure_date DESC LIMIT 2";
+
+    // Cân nặng
+    $weightGoalQuery = "SELECT target_value FROM goals WHERE user_id = :user_id AND goal_type = 'weight' AND is_active = 1 ORDER BY id DESC LIMIT 1";
+    $weightGoalStmt = $db->prepare($weightGoalQuery);
+    $weightGoalStmt->bindParam(':user_id', $userId);
+    $weightGoalStmt->execute();
+    $weightGoal = $weightGoalStmt->fetchColumn();
+    // Lấy cân nặng hiện tại
+    $weightQuery = "SELECT weight FROM health_records WHERE user_id = :user_id ORDER BY measure_date DESC LIMIT 1";
     $weightStmt = $db->prepare($weightQuery);
     $weightStmt->bindParam(':user_id', $userId);
     $weightStmt->execute();
-    
-    $weights = $weightStmt->fetchAll(PDO::FETCH_ASSOC);
-    if (count($weights) >= 2) {
-    $currentWeight = $weights[0]['weight'];
-    $previousWeight = $weights[1]['weight'];
-    $weightLoss = round($previousWeight - $currentWeight, 1);
-
-    $sign = $weightLoss > 0 ? '-' : ($weightLoss < 0 ? '+' : '±');
-    $change = abs($weightLoss); // giá trị tuyệt đối để không hiển thị trùng dấu
-
+    $currentWeight = $weightStmt->fetchColumn();
     $goals[] = [
-        'name' => 'Cân nặng thay đổi',
-        'current' => $sign . $change,
+        'name' => 'Cân nặng',
+        'current' => $currentWeight ? floatval($currentWeight) : null,
+        'target' => $weightGoal ? floatval($weightGoal) : null,
         'unit' => 'kg',
-        'percentage' => min(100, round(abs($weightLoss) / 100 * 100)) // tính theo tuyệt đối
+        'percentage' => ($weightGoal && $currentWeight) ? round(min(100, abs($currentWeight / $weightGoal) * 100)) : 0
     ];
-}
 
-    
-    // Workout goal
-    $workoutQuery = "SELECT COUNT(*) as count FROM workout_logs WHERE user_id = :user_id AND YEARWEEK(workout_date) = YEARWEEK(NOW())";
-    $workoutStmt = $db->prepare($workoutQuery);
-    $workoutStmt->bindParam(':user_id', $userId);
-    $workoutStmt->execute();
-    
-    $workoutResult = $workoutStmt->fetch(PDO::FETCH_ASSOC);
-    $workoutCount = $workoutResult['count'];
-    
+    // Bài tập/tuần
+    $workoutGoalQuery = "SELECT target_value FROM goals WHERE user_id = :user_id AND goal_type = 'workout' AND is_active = 1 ORDER BY id DESC LIMIT 1";
+    $workoutGoalStmt = $db->prepare($workoutGoalQuery);
+    $workoutGoalStmt->bindParam(':user_id', $userId);
+    $workoutGoalStmt->execute();
+    $workoutGoal = $workoutGoalStmt->fetchColumn();
+    // Đếm số buổi tập tuần này
+    $workoutCountQuery = "SELECT COUNT(*) FROM workout_logs WHERE user_id = :user_id AND YEARWEEK(workout_date, 1) = YEARWEEK(CURDATE(), 1)";
+    $workoutCountStmt = $db->prepare($workoutCountQuery);
+    $workoutCountStmt->bindParam(':user_id', $userId);
+    $workoutCountStmt->execute();
+    $workoutCount = $workoutCountStmt->fetchColumn();
     $goals[] = [
         'name' => 'Bài tập',
-        'current' => $workoutCount,
-        'target' => 5,
+        'current' => intval($workoutCount),
+        'target' => $workoutGoal ? intval($workoutGoal) : null,
         'unit' => 'buổi',
-        'percentage' => min(100, round(($workoutCount / 5) * 100))
+        'percentage' => ($workoutGoal && $workoutCount) ? round(min(100, $workoutCount / $workoutGoal * 100)) : 0
     ];
-    
-    // calo intake goal (example)
-    // $goals[] = [
-    //     'name' => 'Uống nước',
-    //     'current' => 1.8,
-    //     'target' => 2.5,
-    //     'unit' => 'L',
-    //     'percentage' => 72
-    // ];
-    
+
+    // Calo/ngày
+    $calorieGoalQuery = "SELECT target_value FROM goals WHERE user_id = :user_id AND goal_type = 'calorie' AND is_active = 1 ORDER BY id DESC LIMIT 1";
+    $calorieGoalStmt = $db->prepare($calorieGoalQuery);
+    $calorieGoalStmt->bindParam(':user_id', $userId);
+    $calorieGoalStmt->execute();
+    $calorieGoal = $calorieGoalStmt->fetchColumn();
+    // Tổng calo hôm nay
+    $calorieTodayQuery = "SELECT SUM(calories) FROM nutrition_logs WHERE user_id = :user_id AND DATE(created_at) = CURDATE()";
+    $calorieTodayStmt = $db->prepare($calorieTodayQuery);
+    $calorieTodayStmt->bindParam(':user_id', $userId);
+    $calorieTodayStmt->execute();
+    $calorieToday = $calorieTodayStmt->fetchColumn();
+    $goals[] = [
+        'name' => 'Calo',
+        'current' => $calorieToday ? intval($calorieToday) : 0,
+        'target' => $calorieGoal ? intval($calorieGoal) : null,
+        'unit' => 'kcal',
+        'percentage' => ($calorieGoal && $calorieToday) ? round(min(100, $calorieToday / $calorieGoal * 100)) : 0
+    ];
+
     echo json_encode($goals);
-    
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['message' => 'Server error: ' . $e->getMessage()]);

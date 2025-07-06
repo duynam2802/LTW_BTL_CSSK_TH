@@ -16,45 +16,59 @@ function setupAuthForms() {
     }
 }
 
+// Toast notification
+function showToast(message, type = 'info') {
+    // Tạo container nếu chưa có
+    let toast = document.getElementById('toastNotification');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastNotification';
+        document.body.appendChild(toast);
+    }
+    toast.className = `toast-notification ${type}`;
+    toast.innerHTML = `
+        <span class="message">${message}</span>
+        <button class="close-btn" onclick="this.parentElement.classList.remove('show')">&times;</button>
+        <div class="progress-bar"></div>
+    `;
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3500);
+}
+
 async function handleLogin(e) {
     e.preventDefault();
-    
     const formData = {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
         remember: document.getElementById('remember').checked
     };
-    
-    // Basic validation
     if (!formData.email || !formData.password) {
-        showAlert('Vui lòng điền đầy đủ thông tin', 'warning');
+        showToast('Vui lòng điền đầy đủ thông tin', 'error');
         return;
     }
-    
     try {
         showLoading();
-        
         const response = await fetch('api/auth/login.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
-        
         const result = await response.json();
-        
         if (response.ok) {
-            showAlert('Đăng nhập thành công!', 'success');
+            showToast('Đăng nhập thành công!', 'success');
             setTimeout(() => {
                 window.location.href = 'index.php';
             }, 1500);
         } else {
-            showAlert(result.message || 'Đăng nhập thất bại', 'error');
+            showToast(result.message || 'Đăng nhập thất bại', 'error');
         }
     } catch (error) {
         console.error('Login error:', error);
-        showAlert('Có lỗi xảy ra khi đăng nhập', 'error');
+        showToast('Có lỗi xảy ra khi đăng nhập', 'error');
     } finally {
         hideLoading();
     }
@@ -62,59 +76,47 @@ async function handleLogin(e) {
 
 async function handleRegister(e) {
     e.preventDefault();
-    
     const formData = {
         fullName: document.getElementById('fullName').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
         confirmPassword: document.getElementById('confirmPassword').value
     };
-    
-    // Validation
     if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
-        showAlert('Vui lòng điền đầy đủ thông tin', 'warning');
+        showToast('Vui lòng điền đầy đủ thông tin', 'error');
         return;
     }
-    
     if (formData.password.length < 6) {
-        showAlert('Mật khẩu phải có ít nhất 6 ký tự', 'warning');
+        showToast('Mật khẩu phải có ít nhất 6 ký tự', 'error');
         return;
     }
-    
     if (formData.password !== formData.confirmPassword) {
-        showAlert('Mật khẩu xác nhận không khớp', 'warning');
+        showToast('Mật khẩu xác nhận không khớp', 'error');
         return;
     }
-    
     if (!document.getElementById('terms').checked) {
-        showAlert('Vui lòng đồng ý với điều khoản sử dụng', 'warning');
+        showToast('Vui lòng đồng ý với điều khoản sử dụng', 'error');
         return;
     }
-    
     try {
         showLoading();
-        
         const response = await fetch('api/auth/register.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
-        
         const result = await response.json();
-        
         if (response.ok) {
-            showAlert('Đăng ký thành công! Chuyển hướng đến trang đăng nhập...', 'success');
+            showToast('Đăng ký thành công! Chuyển hướng đến trang đăng nhập...', 'success');
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);
         } else {
-            showAlert(result.message || 'Đăng ký thất bại', 'error');
+            showToast(result.message || 'Đăng ký thất bại', 'error');
         }
     } catch (error) {
         console.error('Register error:', error);
-        showAlert('Có lỗi xảy ra khi đăng ký', 'error');
+        showToast('Có lỗi xảy ra khi đăng ký', 'error');
     } finally {
         hideLoading();
     }
@@ -131,30 +133,5 @@ function hideLoading() {
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) {
         overlay.classList.remove('show');
-    }
-}
-
-function showAlert(message, type = 'info') {
-    const alertModal = document.getElementById('alertModal');
-    const alertIcon = document.getElementById('alertIcon');
-    const alertMessage = document.getElementById('alertMessage');
-    
-    // Set icon based on type
-    const icons = {
-        success: '✅',
-        error: '❌',
-        warning: '⚠️',
-        info: 'ℹ️'
-    };
-    
-    alertIcon.textContent = icons[type] || icons.info;
-    alertMessage.textContent = message;
-    alertModal.classList.add('show');
-}
-
-function closeAlert() {
-    const alertModal = document.getElementById('alertModal');
-    if (alertModal) {
-        alertModal.classList.remove('show');
     }
 }

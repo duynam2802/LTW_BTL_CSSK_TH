@@ -186,9 +186,9 @@ body {
 }
 
 .logo-text p {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #444851;
-    margin-top: 0.25rem;
+    /* margin-top: 0.25rem; */
 }
 
 
@@ -767,7 +767,7 @@ body {
 }
 @media (min-width: 1025px) {
   .profile-grid {
-    grid-template-columns: 2fr 1.2fr 1fr 1fr;
+    /* grid-template-columns: 2fr 1.2fr 1fr 1fr; */
     grid-template-areas:
       "profile-card profile-form goal-card stress-card";
   }
@@ -1766,4 +1766,65 @@ textarea {
         box-shadow 0.25s cubic-bezier(.4,0,.2,1),
         transform 0.25s cubic-bezier(.4,0,.2,1),
         border 0.2s;
+}
+
+/* ==== PROFILE GOAL CARD ONLY ==== */
+.goal-card .weight-goal-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.goal-card .goal-type-btn {
+  background: #e0f2fe;
+  color: #018486;
+  border: 2px solid #06b6d4;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+}
+.goal-card .goal-type-btn.active, .goal-card .goal-type-btn:focus {
+  background: linear-gradient(135deg, #06b6d4, #018486);
+  color: #fff;
+  border-color: #018486;
+}
+.goal-card #weightGoalValue, .goal-card #weightGoal {
+  width: 80px;
+  text-align: right;
+}
+@media (max-width: 768px) {
+  .goal-card .weight-goal-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+  .goal-card .goal-type-btn {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+  .goal-card #weightGoalValue, .goal-card #weightGoal {
+    width: 100%;
+  }
+}
+
+
+.profile-card {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+}
+
+
+.sidebar-header a {
+    text-decoration: none;
 }

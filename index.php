@@ -36,11 +36,13 @@ if (!isset($_SESSION['user_id'])) {
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img">
-                    <div class="logo-text">
-                        <h1>Health</h1>
-                        <p>Chăm sóc sức khỏe - thể hình</p>
-                    </div>
+                    <a href="home.html">
+                        <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img">
+                        <div class="logo-text">
+                            <h1>Health & Fitness</h1>
+                            <p>Chăm sóc sức khỏe - thể hình</p>
+                        </div>
+                    </a>
                 </div>
                 <button class="logout-btn" onclick="logout()">
                     <span>🚪</span> Đăng xuất
@@ -545,30 +547,57 @@ if (!isset($_SESSION['user_id'])) {
                             <span class="icon">✏️</span>
                         </div>
                         <form class="profile-form" id="profileForm">
-                            <!-- Form cập nhật thông tin cá nhân -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Họ và tên</label>
+                                    <input type="text" id="fullName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tuổi</label>
+                                    <input type="number" id="age" placeholder="22">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giới tính</label>
+                                    <select id="gender">
+                                        <option value="male">Nam</option>
+                                        <option value="female">Nữ</option>
+                                        <option value="other">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Cập nhật thông tin</button>
                         </form>
                     </div>
-                    <!-- Card: Mục tiêu cá nhân -->
-                    <div class="card goal-card">
-                        <div class="card-header">
-                            <h3>Mục tiêu cá nhân</h3>
-                            <span class="icon">🎯</span>
-                        </div>
-                        <div id="goalList">
-                            <!-- Danh sách mục tiêu -->
-                        </div>
+                </div>
+                <!-- Card: Mục tiêu cá nhân (nằm dưới cùng, ngoài profile-grid) -->
+                <div class="card goal-card" style="margin-top:2rem;">
+                    <div class="card-header">
+                        <h3>Mục tiêu cá nhân</h3>
+                        <span class="icon">🎯</span>
                     </div>
-                    <!-- Card: Hoạt động giảm stress -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Hoạt động giảm stress</h3>
-                            <span class="icon">🧠</span>
+                    <form class="goal-form" id="goalForm">
+                        <div class="form-group">
+                            <label>Mục tiêu cân nặng</label>
+                            <div class="weight-goal-row">
+                                <button type="button" class="goal-type-btn" id="btnWeightDown">Giảm</button>
+                                <button type="button" class="goal-type-btn" id="btnWeightUp">Tăng</button>
+                                <input type="number" id="weightGoalValue" min="0" placeholder="Số kg">
+                                <span>kg</span>
+                                <input type="hidden" id="weightGoalType" value="down">
+                            </div>
                         </div>
-                        <div class="stress-activities">
-                            <button class="activity-btn">🧘 Thiền định</button>
-                            <button class="activity-btn">🎵 Nhạc thư giãn</button>
-                            <button class="activity-btn">💨 Thở sâu</button>
+                        <div class="form-group">
+                            <label for="workoutGoal">Mục tiêu luyện tập (buổi/tuần)</label>
+                            <input type="number" id="workoutGoal" placeholder="Ví dụ: 4">
                         </div>
+                        <div class="form-group">
+                            <label for="calorieGoal">Mục tiêu calo/ngày</label>
+                            <input type="number" id="calorieGoalInput" placeholder="Ví dụ: 2000">
+                        </div>
+                        <button type="submit" class="btn-primary">Cập nhật mục tiêu</button>
+                    </form>
+                    <div id="goalList">
+                        <!-- Danh sách mục tiêu -->
                     </div>
                 </div>
             </section>
