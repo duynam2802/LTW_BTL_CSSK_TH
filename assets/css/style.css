@@ -2667,3 +2667,153 @@ textarea {
     font-size: 1rem;
     color: #64748b;
 }
+
+/* delete button */
+
+
+.food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f9fafb;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.food-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.food-item .delete-meal-btn {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px) scale(0.8);
+    transition: 
+        opacity 0.2s cubic-bezier(.4,0,.2,1),
+        transform 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+.food-item:hover .delete-meal-btn,
+.food-item:focus-within .delete-meal-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) scale(1);
+}
+
+.delete-meal-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-left: 8px;
+    border-radius: 50%;
+    padding: 2px 6px;
+    transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.delete-meal-btn:hover, .delete-meal-btn:focus {
+    color: #fff;
+    /* background: #e74c3c;
+    box-shadow: 0 2px 8px rgba(231,76,60,0.15); */
+    outline: none;
+}
+
+/* CSS */
+.confirm-wrapper {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.confirm-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.confirm-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%) scale(0.95);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.confirm-popup-content {
+  text-align: center;
+}
+
+.confirm-popup-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s ease;
+}
+
+.btn-confirm {
+  background-color: #018486;
+  color: #fff;
+}
+
+.btn-confirm:hover {
+  background-color: #016e70;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #ccc;
+}
+
+/* Animation when showing */
+.confirm-wrapper.show .confirm-popup {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+
+/* Hiệu ứng khi chọn món ăn */
+.food-item.active {
+    z-index: 2;
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(1,132,134,0.13), 0 2px 8px rgba(0,0,0,0.08);
+    transform: scale(1.01);
+    border: 2px solid #018486;
+    transition:
+        background 0.25s cubic-bezier(.4,0,.2,1),
+        box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+        transform 0.25s cubic-bezier(.4,0,.2,1),
+        border 0.2s;
+}

@@ -92,7 +92,7 @@ try {
     }
 
     // Lấy toàn bộ lịch sử 
-    $historyQuery = "SELECT weight, height, systolic_bp, diastolic_bp, heart_rate, measure_date 
+    $historyQuery = "SELECT id, weight, height, systolic_bp, diastolic_bp, heart_rate, measure_date 
                      FROM health_records 
                      WHERE user_id = :user_id 
                      ORDER BY measure_date ASC";
@@ -104,6 +104,7 @@ try {
     while ($row = $historyStmt->fetch(PDO::FETCH_ASSOC)) {
         $bmi = round($row['weight'] / pow($row['height'] / 100, 2), 1);
         $history[] = [
+            'id' => (int)$row['id'],
             'measure_date' => $row['measure_date'],
             'weight' => (float)$row['weight'],
             'height' => (int)$row['height'],

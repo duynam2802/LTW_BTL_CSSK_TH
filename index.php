@@ -291,24 +291,24 @@ if (!isset($_SESSION['user_id'])) {
                             <h3>Lịch sử bữa ăn</h3>
                             <span class="icon">🍽️</span>
                         </div>
-                     
-            
-                            <!-- filter -->
-                            <div class="history-filter" id="mealHistoryFilter"
-                                style="display: flex; align-items: center; gap: 8px;">
-                                <input type="date" id="filterDate">
-                                <div class="filter-btn-group">
-                                    <button class="filter-btn" id="prevMonthBtn">&#8592;</button>
-                                    <button class="filter-btn" id="currentMonthBtn"><span>&#128197; HIỆN TẠI</span></button>
-                                    <button class="filter-btn" id="nextMonthBtn">&#8594;</button>
-                                </div>
-                            </div>
 
 
-                            <div class="meals-list" id="mealList">
-                                <!-- Today's meals will be loaded here -->
+                        <!-- filter -->
+                        <div class="history-filter" id="mealHistoryFilter"
+                            style="display: flex; align-items: center; gap: 8px;">
+                            <input type="date" id="filterDate">
+                            <div class="filter-btn-group">
+                                <button class="filter-btn" id="prevMonthBtn">&#8592;</button>
+                                <button class="filter-btn" id="currentMonthBtn"><span>&#128197; HIỆN TẠI</span></button>
+                                <button class="filter-btn" id="nextMonthBtn">&#8594;</button>
                             </div>
-                      
+                        </div>
+
+
+                        <div class="meals-list" id="mealList">
+                            <!-- Today's meals will be loaded here -->
+                        </div>
+
                     </div>
 
                 </div>
@@ -503,85 +503,85 @@ if (!isset($_SESSION['user_id'])) {
             </section>
 
 
-         <!-- Profile Section -->
-<section id="profile" class="content-section">
-    <div class="section-header">
-        <h2>Hồ sơ cá nhân</h2>
-        <p>Quản lý thông tin và mục tiêu của bạn</p>
-    </div>
+            <!-- Profile Section -->
+            <section id="profile" class="content-section">
+                <div class="section-header">
+                    <h2>Hồ sơ cá nhân</h2>
+                    <p>Quản lý thông tin và mục tiêu của bạn</p>
+                </div>
 
-    <div class="profile-grid">
-        <div class="card profile-card">
-            <div class="profile-avatar">
-                <div class="avatar">👤</div>
-                <h3 id="profileName"><?php echo htmlspecialchars($_SESSION['full_name']); ?></h3>
-                <p>Sinh viên UTH</p>
-            </div>
-            <div class="profile-info" id="profileInfo">
-                <!-- Profile info will be loaded here -->
-            </div>
-        </div>
+                <div class="profile-grid">
+                    <div class="card profile-card">
+                        <div class="profile-avatar">
+                            <div class="avatar">👤</div>
+                            <h3 id="profileName"><?php echo htmlspecialchars($_SESSION['full_name']); ?></h3>
+                            <p>Sinh viên UTH</p>
+                        </div>
+                        <div class="profile-info" id="profileInfo">
+                            <!-- Profile info will be loaded here -->
+                        </div>
+                    </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>Cập nhật thông tin</h3>
-                <span class="icon">✏️</span>
-            </div>
-            <form class="profile-form" id="profileForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Họ và tên</label>
-                        <input type="text" id="fullName"
-                            value="<?php echo htmlspecialchars($_SESSION['full_name']); ?>" required>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Cập nhật thông tin</h3>
+                            <span class="icon">✏️</span>
+                        </div>
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Họ và tên</label>
+                                    <input type="text" id="fullName"
+                                        value="<?php echo htmlspecialchars($_SESSION['full_name']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="email"
+                                        value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Tuổi</label>
+                                    <input type="number" id="age" placeholder="22">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giới tính</label>
+                                    <select id="gender">
+                                        <option value="male">Nam</option>
+                                        <option value="female">Nữ</option>
+                                        <option value="other">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Cập nhật thông tin</button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="email"
-                            value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tuổi</label>
-                        <input type="number" id="age" placeholder="22">
-                    </div>
-                    <div class="form-group">
-                        <label>Giới tính</label>
-                        <select id="gender">
-                            <option value="male">Nam</option>
-                            <option value="female">Nữ</option>
-                            <option value="other">Khác</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">Cập nhật thông tin</button>
-            </form>
-        </div>
 
-        <!-- Đặt Mục Tiêu Section -->
-        <div class="card">
-            <div class="card-header">
-                <h3>ĐẶT MỤC TIÊU</h3>
-                <span class="icon">🎯</span>
-            </div>
-            <form class="goal-form" id="goalForm">
-                <div class="form-group">
-                    <label for="fitnessGoal">Mục tiêu thể hình</label>
-                    <input type="text" id="fitnessGoal" placeholder="Ví dụ: Giảm 5kg, Tăng cơ...">
+                    <!-- Đặt Mục Tiêu Section -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>ĐẶT MỤC TIÊU</h3>
+                            <span class="icon">🎯</span>
+                        </div>
+                        <form class="goal-form" id="goalForm">
+                            <div class="form-group">
+                                <label for="fitnessGoal">Mục tiêu thể hình</label>
+                                <input type="text" id="fitnessGoal" placeholder="Ví dụ: Giảm 5kg, Tăng cơ...">
+                            </div>
+                            <div class="form-group">
+                                <label for="nutritionGoal">Mục tiêu dinh dưỡng</label>
+                                <input type="text" id="nutritionGoal" placeholder="Ví dụ: Ăn nhiều rau, Uống đủ nước...">
+                            </div>
+                            <div class="form-group">
+                                <label for="sleepGoal">Mục tiêu giấc ngủ</label>
+                                <input type="text" id="sleepGoal" placeholder="Ví dụ: Ngủ đủ 8 tiếng mỗi đêm">
+                            </div>
+                            <button type="submit" class="btn-primary">Lưu Mục Tiêu</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nutritionGoal">Mục tiêu dinh dưỡng</label>
-                    <input type="text" id="nutritionGoal" placeholder="Ví dụ: Ăn nhiều rau, Uống đủ nước...">
-                </div>
-                <div class="form-group">
-                    <label for="sleepGoal">Mục tiêu giấc ngủ</label>
-                    <input type="text" id="sleepGoal" placeholder="Ví dụ: Ngủ đủ 8 tiếng mỗi đêm">
-                </div>
-                <button type="submit" class="btn-primary">Lưu Mục Tiêu</button>
-            </form>
-        </div>
-    </div>
-</section>
+            </section>
 
         </main>
     </div>
@@ -592,6 +592,21 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <script src="assets/js/script.js"></script>
+
+    <!-- pop up xác nhận -->
+    <div id="globalConfirmWrapper" class="confirm-wrapper">
+  <div class="confirm-overlay"></div>
+  <div id="globalConfirmPopup" class="confirm-popup animated-popup">
+    <div class="confirm-popup-content">
+      <p id="confirmPopupMessage">Bạn có chắc muốn thực hiện thao tác này?</p>
+      <div class="confirm-buttons">
+        <button id="confirmPopupOkBtn" class="btn btn-confirm">Đồng ý</button>
+        <button id="confirmPopupCancelBtn" class="btn btn-cancel">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 
 </html>

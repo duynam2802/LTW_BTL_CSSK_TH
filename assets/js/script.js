@@ -9,6 +9,32 @@ document.addEventListener('DOMContentLoaded', function() {
     loadDashboardData();
 });
 
+// JavaScript
+function showConfirmPopup(message, onConfirm) {
+  const wrapper = document.getElementById('globalConfirmWrapper');
+  const messageEl = document.getElementById('confirmPopupMessage');
+  const okBtn = document.getElementById('confirmPopupOkBtn');
+  const cancelBtn = document.getElementById('confirmPopupCancelBtn');
+
+  messageEl.textContent = message;
+  wrapper.classList.add('show');
+  wrapper.style.display = 'block';
+
+  okBtn.onclick = () => {
+    wrapper.classList.remove('show');
+    setTimeout(() => wrapper.style.display = 'none', 300);
+    if (onConfirm) onConfirm();
+  };
+
+  cancelBtn.onclick = () => {
+    wrapper.classList.remove('show');
+    setTimeout(() => wrapper.style.display = 'none', 300);
+  };
+}
+
+
+
+
 function initializeApp() {
     // Set current date for date inputs
     const today = new Date().toISOString().split('T')[0];
@@ -395,9 +421,41 @@ function updateHealthHistory(history, filterMonthYear = '') {
                     Nhịp tim: <b>${item.heart_rate} bpm</b>
                 </p>
                 ${item.notes ? `<p>Ghi chú: ${item.notes}</p>` : ''}
+                
+            </div>
+            <div class="history-meta">
+                <button class="btn-delete" data-id="${item.id}">Xóa</button>
             </div>
         </div>
     `).join('');
+
+    
+
+    // Gán sự kiện xóa cho các nút
+    container.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.onclick = function() {
+        const id = this.dataset.id; // dùng this thay vì btn để chắc chắn
+        showConfirmPopup('Bạn có chắc muốn xóa chỉ số sức khỏe này?', async () => {
+            if (!id) {
+                showToast('Không tìm thấy ID để xóa!', 'error');
+                return;
+            }
+            await deleteHealthRecord(parseInt(id));
+        });
+    };
+});
+
+}
+
+async function deleteHealthRecord(id) {
+    try {
+        await apiRequest('health/delete.php', 'POST', { id });
+        showToast('Đã xóa chỉ số sức khỏe!', 'success');
+        loadHealthData();
+        loadDashboardData();
+    } catch (e) {
+        showToast('Không thể xóa chỉ số sức khỏe', 'error');
+    }
 }
 
 async function handleHealthSubmit(e) {
@@ -435,10 +493,8 @@ async function loadNutritionData() {
         ]);
 
         // console.log("History from API:", history);
-        console.log("✅ Full History:", fullHistory);
-
-
-        
+        // console.log("✅ Full History:", fullHistory);
+  
         updateNutritionStats(stats);
         nutritionHistoryRaw = fullHistory; // Lưu toàn bộ lịch sử bữa ăn (nếu API trả về meals là toàn bộ lịch sử, nếu không hãy dùng history)
         updateTodayMeals(filterMealsByDate(nutritionHistoryRaw, getTodayStr())); // Hiển thị mặc định hôm nay
@@ -466,7 +522,7 @@ async function loadNutritionData() {
     return (meals || []).filter(item => {
         const raw = item.created_at;
 
-        // Bỏ qua nếu không có ngày hoặc là ngày mặc định sai
+        // Bỏ qua nếu không có ngày hoặc ngày lỗi
         if (!raw || raw === "0000-00-00 00:00:00") return false;
 
         try {
@@ -478,16 +534,18 @@ async function loadNutritionData() {
                 return false;
             }
 
-            const dStr = d.toISOString().split('T')[0];
+            // Trích ngày theo giờ máy local (giờ VN)
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            const dStr = `${yyyy}-${mm}-${dd}`;
+
             return dStr === dateStr;
         } catch (e) {
             console.error("❌ Lỗi trong filterMealsByDate:", e);
             return false;
         }
     });
-
-
-
 }
 
 
@@ -565,38 +623,92 @@ function updateTodayMeals(meals) {
         return;
     }
 
-    // Định nghĩa các bữa ăn
+    // Nhóm theo loại bữa ăn
     const mealTypes = {
         breakfast: { name: '🌅 Bữa sáng', items: [] },
-        lunch:     { name: '☀️ Bữa trưa', items: [] },
-        dinner:    { name: '🌙 Bữa tối', items: [] },
-        snack:     { name: '🍎 Ăn vặt', items: [] },
-        unknown:   { name: '❓ Không rõ bữa', items: [] }, // fallback
+        lunch: { name: '☀️ Bữa trưa', items: [] },
+        dinner: { name: '🌙 Bữa tối', items: [] },
+        snack: { name: '🍎 Ăn vặt', items: [] }
     };
 
     meals.forEach(meal => {
-        const type = meal.meal_type || 'unknown';
-        if (!mealTypes[type]) mealTypes[type] = { name: `❓ ${type}`, items: [] };
-        mealTypes[type].items.push(meal);
+        if (mealTypes[meal.meal_type]) {
+            mealTypes[meal.meal_type].items.push(meal);
+        }
     });
 
-    // Render từng nhóm bữa ăn
     container.innerHTML = Object.entries(mealTypes)
-        .filter(([_, data]) => data.items.length > 0)
-        .map(([_, data]) => {
-            const totalCalories = data.items.reduce((sum, item) => sum + parseInt(item.calories || 0), 0);
+        .filter(([type, data]) => data.items.length > 0)
+        .map(([type, data]) => {
+            const totalCalories = data.items.reduce((sum, item) => sum + parseInt(item.calories), 0);
             return `
                 <div class="meal-section">
                     <h4>${data.name} <span class="meal-calories">${totalCalories} kcal</span></h4>
-                    ${data.items.map(item => `
-                        <div class="food-item">
-                            <span>${item.food_name || 'Không rõ món'} (Tổng khối lượng: ${item.quantity || 0}g)</span>
-                            <span>${item.calories || 0} kcal</span>
-                        </div>
-                    `).join('')}
+${data.items.map(item => `
+    <div class="food-item" tabindex="0" data-id="${item.id}">
+        <span>
+            ${item.food_name} (Tổng khối lượng : ${item.quantity}g)
+        </span>
+        <span class="food-meta">
+            <span>${item.calories} kcal</span>
+            <button class="delete-meal-btn" data-id="${item.id}" title="Xóa món ăn" style="display:none;">🗑️</button>
+        </span>
+    </div>
+`).join('')}
                 </div>
             `;
         }).join('');
+
+container.querySelectorAll('.food-item').forEach(itemDiv => {
+    itemDiv.addEventListener('click', function(e) {
+        // Bỏ active ở các món khác
+        container.querySelectorAll('.food-item.active').forEach(div => div.classList.remove('active'));
+        // Thêm active cho món này
+        this.classList.add('active');
+
+        // Ẩn tất cả nút xóa khác
+        container.querySelectorAll('.delete-meal-btn').forEach(btn => btn.style.display = 'none');
+        // Hiện nút xóa của item này
+        const btn = this.querySelector('.delete-meal-btn');
+        if (btn) btn.style.display = 'inline-block';
+        e.stopPropagation();
+    });
+});
+
+// Ẩn nút xóa khi click ra ngoài
+document.addEventListener('click', function(e) {
+    if (!container.contains(e.target)) {
+        container.querySelectorAll('.food-item.active').forEach(div => div.classList.remove('active'));
+        container.querySelectorAll('.delete-meal-btn').forEach(btn => btn.style.display = 'none');
+    }
+});
+
+// Gán sự kiện xóa cho các nút
+container.querySelectorAll('.delete-meal-btn').forEach(btn => {
+    btn.onclick = function(ev) {
+        ev.stopPropagation();
+
+        const mealId = btn.dataset.id;
+        const foodName = btn.dataset.foodName || 'món ăn này';
+
+        showConfirmPopup(`Bạn có chắc muốn xóa ${foodName}?`, async () => {
+            await deleteMeal(mealId);
+        });
+    };
+});
+
+
+}
+
+// Hàm gọi API xóa
+async function deleteMeal(id) {
+    try {
+        const res = await apiRequest('nutrition/delete.php', 'POST', { id });
+        showToast('Đã xóa món ăn!', 'success');
+        loadNutritionData();
+    } catch (e) {
+        showToast('Xóa không thành công!', 'error');
+    }
 }
 
 
@@ -1070,14 +1182,14 @@ function closeAlert() {
 }
 
 async function logout() {
-    if (!confirm('Bạn có chắc muốn đăng xuất?')) return;
-    
-    try {
-        await apiRequest('auth/logout.php', 'POST');
-        window.location.href = 'index.php';
-    } catch (error) {
-        showToast('Không thể đăng xuất', 'error');
-    }
+    showConfirmPopup('Bạn có chắc muốn đăng xuất?', async () => {
+        try {
+            await apiRequest('auth/logout.php', 'POST');
+            window.location.href = 'index.php';
+        } catch (error) {
+            showToast('Không thể đăng xuất', 'error');
+        }
+    });
 }
 
 function renderHealthCharts(data) {
