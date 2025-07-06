@@ -1828,3 +1828,17 @@ textarea {
 .sidebar-header a {
     text-decoration: none;
 }
+
+/* Hiển thị lịch sử giấc ngủ thành 2 cột */
+.sleep-history {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+@media (max-width: 900px) {
+    .sleep-history {
+        grid-template-columns: 1fr;
+    }
+}
