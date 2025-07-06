@@ -732,6 +732,8 @@ async function handleNutritionSubmit(e) {
 }
 
 // Tải dữ liệu workout
+let workoutHistoryRaw = []; // Biến toàn cục
+
 async function loadWorkoutData() {
     try {
         const [stats, history] = await Promise.all([
@@ -739,11 +741,63 @@ async function loadWorkoutData() {
             apiRequest('workouts/history.php')
         ]);
         renderWorkoutStats(stats);
-        renderWorkoutHistory(history);
+        workoutHistoryRaw = history; // Lưu toàn bộ lịch sử
     } catch (error) {
         console.error('❌ Lỗi tải dữ liệu workout:', error);
         showToast('Không thể tải dữ liệu workout', 'error');
     }
+
+    // Filter theo ngày
+    const dateInput = document.getElementById('workoutFilterDate');
+    const prevBtn = document.getElementById('workoutPrevDayBtn');
+    const nowBtn = document.getElementById('workoutCurrentDayBtn');
+    const nextBtn = document.getElementById('workoutNextDayBtn');
+
+    function getTodayStr() {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function filterWorkoutsByDate(workouts, dateStr) {
+        return (workouts || []).filter(item => {
+            const raw = item.workout_date;
+            if (!raw || raw === "0000-00-00") return false;
+            const onlyDate = raw.trim().split(' ')[0];
+            return onlyDate === dateStr;
+        });
+    }
+
+    function filterAndRenderWorkoutHistory() {
+        const selectedDate = dateInput.value;
+        renderWorkoutHistory(filterWorkoutsByDate(workoutHistoryRaw, selectedDate));
+    }
+
+    // Set mặc định là hôm nay nếu chưa có value
+    if (dateInput && !dateInput.value) dateInput.value = getTodayStr();
+
+    if (dateInput) dateInput.addEventListener('change', filterAndRenderWorkoutHistory);
+
+    if (prevBtn) prevBtn.onclick = function() {
+        let d = dateInput.value ? new Date(dateInput.value) : new Date();
+        d.setDate(d.getDate() - 1);
+        dateInput.value = d.toISOString().split('T')[0];
+        filterAndRenderWorkoutHistory();
+    };
+    if (nextBtn) nextBtn.onclick = function() {
+        let d = dateInput.value ? new Date(dateInput.value) : new Date();
+        d.setDate(d.getDate() + 1);
+        dateInput.value = d.toISOString().split('T')[0];
+        filterAndRenderWorkoutHistory();
+    };
+    if (nowBtn) nowBtn.onclick = function() {
+        dateInput.value = getTodayStr();
+        filterAndRenderWorkoutHistory();
+    };
+
+    if (dateInput) filterAndRenderWorkoutHistory();
 }
 
 // Hiển thị thống kê workout
@@ -867,19 +921,18 @@ async function handleWorkoutSubmit(e) {
 
 // Xóa buổi tập
 async function deleteWorkout(id) {
-    if (!confirm('Bạn có chắc muốn xóa buổi tập này?')) return;
-
-    try {
-        await apiRequest('workouts/delete.php', 'POST', { id });
-        showToast('Đã xóa buổi tập thành công!', 'success');
-        loadWorkoutData();
-        loadDashboardData?.();
-    } catch (error) {
-        console.error(error);
-        showToast('Không thể xóa buổi tập', 'error');
-    }
+    showConfirmPopup('Bạn có chắc muốn xóa buổi tập này?', async () => {
+        try {
+            await apiRequest('workouts/delete.php', 'POST', { id });
+            showToast('Đã xóa buổi tập thành công!', 'success');
+            loadWorkoutData();
+            loadDashboardData?.();
+        } catch (error) {
+            console.error(error);
+            showToast('Không thể xóa buổi tập', 'error');
+        }
+    });
 }
-
 
 // Sleep Functions
 // Load dữ liệu giấc ngủ
