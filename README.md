@@ -43,27 +43,68 @@ Hệ thống theo dõi sức khỏe và thể dục dành cho sinh viên Đại 
 ## Cấu trúc thư mục
 
 ```
-uth-health-system/
+LTW_BTL_CSSK_TH/
 ├── index.php              # Trang chính
+├── index_html.html        # Trang chính (HTML version)
+├── home.html              # Trang chủ
 ├── login.html             # Trang đăng nhập
 ├── register.html          # Trang đăng ký
+├── UserGuide.html         # Hướng dẫn sử dụng
 ├── assets/
 │   ├── css/
 │   │   ├── style.css      # CSS chính
-│   │   └── auth.css       # CSS cho authentication
-│   └── js/
-│       ├── script.js      # JavaScript chính
-│       └── auth.js        # JavaScript cho authentication
+│   │   ├── auth.css       # CSS cho authentication
+│   │   ├── home.css       # CSS cho trang chủ
+│   │   ├── footer.css     # CSS cho footer
+│   │   ├── toast.css      # CSS cho thông báo
+│   │   └── UserGuide.css  # CSS cho hướng dẫn
+│   ├── js/
+│   │   ├── script.js      # JavaScript chính
+│   │   ├── auth.js        # JavaScript cho authentication
+│   │   └── UserGuide.js   # JavaScript cho hướng dẫn
+│   └── img/               # Thư mục hình ảnh
 ├── api/
 │   ├── config/
 │   │   └── database.php   # Cấu hình database
 │   ├── auth/              # API authentication
+│   │   ├── login.php
+│   │   ├── logout.php
+│   │   └── register.php
 │   ├── dashboard/         # API dashboard
+│   │   ├── activities.php
+│   │   ├── goals.php
+│   │   └── stats.php
 │   ├── health/            # API sức khỏe
+│   │   ├── add.php
+│   │   ├── delete.php
+│   │   └── stats.php
 │   ├── nutrition/         # API dinh dưỡng
+│   │   ├── add.php
+│   │   ├── delete.php
+│   │   ├── stats.php
+│   │   ├── stats_macro.php
+│   │   ├── today.php
+│   │   ├── history.php
+│   │   └── full_history.php
 │   ├── workouts/          # API luyện tập
+│   │   ├── add.php
+│   │   ├── delete.php
+│   │   ├── stats.php
+│   │   ├── today.php
+│   │   └── history.php
 │   ├── sleep/             # API giấc ngủ
-│   └── profile/           # API hồ sơ
+│   │   ├── add.php
+│   │   ├── delete.php
+│   │   ├── stats.php
+│   │   └── history.php
+│   └── alert/             # API thông báo
+│       └── today.php
+├── docs/                  # Tài liệu
+│   ├── database/
+│   │   └── schema.md
+│   └── external-apis.md
+├── supabase/              # Supabase migrations
+│   └── migrations/
 ├── database.sql           # Schema database
 └── README.md
 ```
