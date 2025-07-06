@@ -372,11 +372,14 @@ body {
 
 .card {
     background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f3f4f6;
-    transition: all 0.3s ease;
+border-radius: 16px;
+padding: 1.5rem;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+border: 1px solid #f3f4f6;
+transition: all 0.3s ease;
+width: 100%; /* Extend full width */
+max-width: 1200px; /* Optional: Maintain a max width */
+
 }
 
 .card:hover {
@@ -755,16 +758,49 @@ body {
 }
 
 /* Profile */
+/* Profile */
 .profile-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Thay đổi grid-template-columns để 2 cột đầu chiếm nhiều không gian hơn */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Giữ nguyên để đảm bảo responsive */
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
-.profile-card {
-    text-align: center;
+/* Thêm quy tắc cho màn hình lớn để 2 cột đầu chiếm 2/3 và cột mục tiêu chiếm 1/3 */
+@media (min-width: 1025px) { /* Áp dụng cho màn hình lớn hơn 1024px */
+    .profile-grid {
+        grid-template-columns: 2fr 1fr; /* Cột đầu tiên chiếm 2 phần, cột thứ hai 1 phần */
+        /* Hoặc nếu bạn muốn 2 cột đầu tiên chiếm 2/3 tổng chiều rộng và cột mục tiêu chiếm 1/3 */
+        /* grid-template-columns: repeat(2, 1fr) 0.5fr; */ /* Ví dụ: 1fr 1fr 0.5fr */
+        /* Để mục tiêu xuống dưới và 2 cái kia to lên, bạn có thể dùng grid-template-areas hoặc chỉ định cột/hàng */
+        grid-template-areas:
+            "profile-card update-info"
+            "goals goals"; /* Mục tiêu sẽ chiếm toàn bộ chiều rộng ở hàng dưới */
+    }
+
+    .profile-card {
+        grid-area: profile-card;
+    }
+
+    .profile-form { /* Đây là form cập nhật thông tin, nằm trong card thứ 2 */
+        grid-area: update-info;
+    }
+
+    .goal-card { /* Đây là card mục tiêu, đã thêm class 'goal-card' vào HTML */
+        grid-area: goals;
+    }
 }
+
+/* Điều chỉnh cho màn hình trung bình (tablet) */
+@media (max-width: 1024px) {
+    .profile-grid {
+        grid-template-columns: 1fr; /* Trên tablet, mỗi card sẽ chiếm 1 hàng */
+    }
+}
+
+/* Giữ nguyên các style khác cho .profile-card, .profile-avatar, .profile-info, v.v. */
+
 
 .profile-avatar {
     margin-bottom: 1.5rem;
@@ -787,10 +823,12 @@ body {
     font-weight: 700;
     color: #1f2937;
     margin-bottom: 0.25rem;
+    text-align: center;
 }
 
 .profile-avatar p {
     color: #6b7280;
+    text-align: center;
 }
 
 .profile-info {

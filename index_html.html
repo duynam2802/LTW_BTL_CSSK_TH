@@ -671,6 +671,7 @@
             </section>
 
             <!-- Profile Section -->
+               <!-- Profile Section -->
             <section id="profile" class="content-section">
                 <div class="section-header">
                     <h2>Hồ sơ cá nhân</h2>
@@ -742,6 +743,37 @@
                     </div>
                 </div>
 
+                <div class="card set-goal-card">
+                    <div class="card-header">
+                        <h3>ĐẶT MỤC TIÊU</h3>
+                        <span class="icon">📝</span>
+                    </div>
+                    <form class="set-goal-form">
+                        <div class="form-group">
+                            <label for="goalType">Loại mục tiêu</label>
+                            <select id="goalType">
+                                <option value="weightLoss">Giảm cân</option>
+                                <option value="muscleGain">Tăng cơ</option>
+                                <option value="fitnessImprovement">Cải thiện thể lực</option>
+                                <option value="sleepImprovement">Cải thiện giấc ngủ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="goalDescription">Mô tả mục tiêu</label>
+                            <input type="text" id="goalDescription" placeholder="Ví dụ: Giảm 5kg trong 2 tháng">
+                        </div>
+                        <div class="form-group">
+                            <label for="targetValue">Giá trị mục tiêu (nếu có)</label>
+                            <input type="text" id="targetValue" placeholder="Ví dụ: 65kg, 5 buổi/tuần">
+                        </div>
+                        <div class="form-group">
+                            <label for="deadline">Thời hạn</label>
+                            <input type="date" id="deadline">
+                        </div>
+                        <button type="submit" class="btn-primary">Lưu mục tiêu</button>
+                    </form>
+                </div>
+
                 <div class="achievements-card card">
                     <div class="card-header">
                         <h3>Thành tích</h3>
@@ -775,6 +807,7 @@
                     </div>
                 </div>
             </section>
+
         </main>
     </div>
 

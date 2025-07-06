@@ -503,62 +503,86 @@ if (!isset($_SESSION['user_id'])) {
             </section>
 
 
-            <!-- Profile Section -->
-            <section id="profile" class="content-section">
-                <div class="section-header">
-                    <h2>Hồ sơ cá nhân</h2>
-                    <p>Quản lý thông tin và mục tiêu của bạn</p>
-                </div>
+         <!-- Profile Section -->
+<section id="profile" class="content-section">
+    <div class="section-header">
+        <h2>Hồ sơ cá nhân</h2>
+        <p>Quản lý thông tin và mục tiêu của bạn</p>
+    </div>
 
-                <div class="profile-grid">
-                    <div class="card profile-card">
-                        <div class="profile-avatar">
-                            <div class="avatar">👤</div>
-                            <h3 id="profileName"><?php echo htmlspecialchars($_SESSION['full_name']); ?></h3>
-                            <p>Sinh viên UTH</p>
-                        </div>
-                        <div class="profile-info" id="profileInfo">
-                            <!-- Profile info will be loaded here -->
-                        </div>
+    <div class="profile-grid">
+        <div class="card profile-card">
+            <div class="profile-avatar">
+                <div class="avatar">👤</div>
+                <h3 id="profileName"><?php echo htmlspecialchars($_SESSION['full_name']); ?></h3>
+                <p>Sinh viên UTH</p>
+            </div>
+            <div class="profile-info" id="profileInfo">
+                <!-- Profile info will be loaded here -->
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Cập nhật thông tin</h3>
+                <span class="icon">✏️</span>
+            </div>
+            <form class="profile-form" id="profileForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Họ và tên</label>
+                        <input type="text" id="fullName"
+                            value="<?php echo htmlspecialchars($_SESSION['full_name']); ?>" required>
                     </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Cập nhật thông tin</h3>
-                            <span class="icon">✏️</span>
-                        </div>
-                        <form class="profile-form" id="profileForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Họ và tên</label>
-                                    <input type="text" id="fullName"
-                                        value="<?php echo htmlspecialchars($_SESSION['full_name']); ?>" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" id="email"
-                                        value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Tuổi</label>
-                                    <input type="number" id="age" placeholder="22">
-                                </div>
-                                <div class="form-group">
-                                    <label>Giới tính</label>
-                                    <select id="gender">
-                                        <option value="male">Nam</option>
-                                        <option value="female">Nữ</option>
-                                        <option value="other">Khác</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn-primary">Cập nhật thông tin</button>
-                        </form>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email"
+                            value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
                     </div>
                 </div>
-            </section>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tuổi</label>
+                        <input type="number" id="age" placeholder="22">
+                    </div>
+                    <div class="form-group">
+                        <label>Giới tính</label>
+                        <select id="gender">
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Cập nhật thông tin</button>
+            </form>
+        </div>
+
+        <!-- Đặt Mục Tiêu Section -->
+        <div class="card">
+            <div class="card-header">
+                <h3>ĐẶT MỤC TIÊU</h3>
+                <span class="icon">🎯</span>
+            </div>
+            <form class="goal-form" id="goalForm">
+                <div class="form-group">
+                    <label for="fitnessGoal">Mục tiêu thể hình</label>
+                    <input type="text" id="fitnessGoal" placeholder="Ví dụ: Giảm 5kg, Tăng cơ...">
+                </div>
+                <div class="form-group">
+                    <label for="nutritionGoal">Mục tiêu dinh dưỡng</label>
+                    <input type="text" id="nutritionGoal" placeholder="Ví dụ: Ăn nhiều rau, Uống đủ nước...">
+                </div>
+                <div class="form-group">
+                    <label for="sleepGoal">Mục tiêu giấc ngủ</label>
+                    <input type="text" id="sleepGoal" placeholder="Ví dụ: Ngủ đủ 8 tiếng mỗi đêm">
+                </div>
+                <button type="submit" class="btn-primary">Lưu Mục Tiêu</button>
+            </form>
+        </div>
+    </div>
+</section>
+
         </main>
     </div>
 
