@@ -289,35 +289,38 @@ async function loadHealthData() {
         // Filter tháng/năm
         const monthInput = document.getElementById('filterMonthYear');
         const prevBtn = document.getElementById('prevMonthBtn');
-        const nextBtn = document.getElementById('nextBtn');
+        const nextBtn = document.getElementById('nextMonthBtn');
         const nowBtn = document.getElementById('currentMonthBtn');
 
         // Set mặc định là tháng hiện tại
         const now = new Date();
         const pad = n => n < 10 ? '0' + n : n;
-        monthInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+        if (monthInput) monthInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
 
         function updateFilter() {
-            updateHealthHistory(healthHistoryRaw, monthInput.value);
+            updateHealthHistory(healthHistoryRaw, monthInput ? monthInput.value : '');
         }
 
-        monthInput.onchange = updateFilter;
+        if (monthInput) monthInput.onchange = updateFilter;
 
-        prevBtn.onclick = function() {
+        if (prevBtn) prevBtn.onclick = function() {
+            if (!monthInput) return;
             let [y, m] = monthInput.value.split('-').map(Number);
             m--;
             if (m < 1) { m = 12; y--; }
             monthInput.value = `${y}-${pad(m)}`;
             updateFilter();
         };
-        nextBtn.onclick = function() {
+        if (nextBtn) nextBtn.onclick = function() {
+            if (!monthInput) return;
             let [y, m] = monthInput.value.split('-').map(Number);
             m++;
             if (m > 12) { m = 1; y++; }
             monthInput.value = `${y}-${pad(m)}`;
             updateFilter();
         };
-        nowBtn.onclick = function() {
+        if (nowBtn) nowBtn.onclick = function() {
+            if (!monthInput) return;
             monthInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
             updateFilter();
         };
@@ -1078,149 +1081,286 @@ async function logout() {
 }
 
 function renderHealthCharts(data) {
-    if (!data || !data.length) return;
+    if (!data || !data.length) {
+        // Hiển thị thông báo khi không có dữ liệu
+        const chartsContainer = document.querySelector('.charts-container');
+        if (chartsContainer) {
+            chartsContainer.innerHTML = `
+                <div class="empty-state">
+                    <div class="icon">📊</div>
+                    <h3>Chưa có dữ liệu biểu đồ</h3>
+                    <p>Hãy thêm chỉ số sức khỏe để xem biểu đồ theo dõi</p>
+                </div>
+            `;
+        }
+        return;
+    }
     
+    // Sắp xếp theo ngày tăng dần
+    data = [...data].sort((a, b) => new Date(a.measure_date) - new Date(b.measure_date));
+    
+    // Destroy existing charts if they exist
+    if (window.healthLineChart) window.healthLineChart.destroy();
+    if (window.healthBarChart) window.healthBarChart.destroy();
 
-    const labels = data.map(item => formatDate(item.measure_date));
-    const bmi = data.map(item => item.bmi);
-    const systolic = data.map(item => item.systolic);
-    const diastolic = data.map(item => item.diastolic);
-    const heartRate = data.map(item => item.heart_rate);
-    const weights = data.map(item => item.weight);
-    const heights = data.map(item => item.height);
+    // Format labels cho đẹp hơn
+    const labels = data.map(item => {
+        const date = new Date(item.measure_date);
+        return date.toLocaleDateString('vi-VN', { 
+            day: '2-digit', 
+            month: '2-digit',
+            year: '2-digit'
+        });
+    });
     
+    const bmi = data.map(item => parseFloat(item.bmi) || 0);
+    const systolic = data.map(item => parseInt(item.systolic) || 0);
+    const diastolic = data.map(item => parseInt(item.diastolic) || 0);
+    const heartRate = data.map(item => parseInt(item.heart_rate) || 0);
+    const weights = data.map(item => parseFloat(item.weight) || 0);
+    const heights = data.map(item => parseInt(item.height) || 0);
 
     const defaultFont = {
-        family: 'Arial, "Segoe UI", Roboto, sans-serif',
-        size: 14,
-        weight: 'normal'
+        family: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        size: 12,
+        weight: '500'
     };
 
     // Biểu đồ đường – Chỉ số sức khỏe
-    new Chart(document.getElementById('lineChart'), {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'BMI',
-                    data: bmi,
-                    borderColor: 'blue',
-                    fill: false,
-                    tension: 0.2
-                },
-                {
-                    label: 'Huyết áp Tâm thu',
-                    data: systolic,
-                    borderColor: 'red',
-                    fill: false,
-                    tension: 0.2
-                },
-                {
-                    label: 'Huyết áp Tâm trương',
-                    data: diastolic,
-                    borderColor: 'orange',
-                    fill: false,
-                    tension: 0.2
-                },
-                {
-                    label: 'Nhịp tim',
-                    data: heartRate,
-                    borderColor: 'green',
-                    fill: false,
-                    tension: 0.2
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Chỉ số sức khỏe theo thời gian',
-                    font: {
-                        ...defaultFont,
-                        size: 18,
-                        weight: 'bold'
+    const lineCtx = document.getElementById('lineChart');
+    if (lineCtx) {
+        window.healthLineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'BMI',
+                        data: bmi,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
                     },
-                    color: '#333'
-                },
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: defaultFont,
-                        color: '#333'
+                    {
+                        label: 'Huyết áp Tâm thu',
+                        data: systolic,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#ef4444',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Huyết áp Tâm trương',
+                        data: diastolic,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#f59e0b',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Nhịp tim',
+                        data: heartRate,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
                     }
-                }
+                ]
             },
-            scales: {
-                x: {
-                    ticks: {
-                        font: defaultFont
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                ...defaultFont,
+                                size: 13
+                            },
+                            color: '#374151',
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        titleFont: {
+                            ...defaultFont,
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            ...defaultFont,
+                            size: 13
+                        }
                     }
                 },
-                y: {
-                    ticks: {
-                        font: defaultFont
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: defaultFont,
+                            color: '#6b7280'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: defaultFont,
+                            color: '#6b7280'
+                        }
                     }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 }
             }
-        }
-    });
+        });
+    }
 
     // Biểu đồ cột – Chiều cao và Cân nặng
-    new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Cân nặng (kg)',
-                    data: weights,
-                    backgroundColor: 'purple'
-                },
-                {
-                    label: 'Chiều cao (cm)',
-                    data: heights,
-                    backgroundColor: 'gray'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Chiều cao và Cân nặng',
-                    font: {
-                        ...defaultFont,
-                        size: 18,
-                        weight: 'bold'
+    const barCtx = document.getElementById('barChart');
+    if (barCtx) {
+        window.healthBarChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Cân nặng (kg)',
+                        data: weights,
+                        backgroundColor: 'rgba(147, 51, 234, 0.8)',
+                        borderColor: '#9333ea',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        hoverBackgroundColor: 'rgba(147, 51, 234, 1)',
+                        hoverBorderColor: '#7c3aed'
                     },
-                    color: '#333'
-                },
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: defaultFont,
-                        color: '#333'
+                    {
+                        label: 'Chiều cao (cm)',
+                        data: heights,
+                        backgroundColor: 'rgba(107, 114, 128, 0.8)',
+                        borderColor: '#6b7280',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        hoverBackgroundColor: 'rgba(107, 114, 128, 1)',
+                        hoverBorderColor: '#4b5563'
                     }
-                }
+                ]
             },
-            scales: {
-                x: {
-                    ticks: {
-                        font: defaultFont
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                ...defaultFont,
+                                size: 13
+                            },
+                            color: '#374151',
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        titleFont: {
+                            ...defaultFont,
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            ...defaultFont,
+                            size: 13
+                        }
                     }
                 },
-                y: {
-                    ticks: {
-                        font: defaultFont
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: defaultFont,
+                            color: '#6b7280'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: defaultFont,
+                            color: '#6b7280'
+                        }
                     }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 }
             }
-        }
-    });
+        });
+    }
 }
 
 function showToast(message, type = 'success') {
@@ -1255,10 +1395,22 @@ function renderMacroLineChart(data) {
     const ctx = document.getElementById('macroLineChart').getContext('2d');
     if (window.macroChart) window.macroChart.destroy();
 
-    const labels = data.map(d => d.date);
+    // Sắp xếp theo ngày tăng dần
+    data = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const labels = data.map(d => {
+        const date = new Date(d.date);
+        return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: '2-digit' });
+    });
     const carbsData = data.map(d => d.carbs);
     const proteinData = data.map(d => d.protein);
     const fatData = data.map(d => d.fat);
+
+    const defaultFont = {
+        family: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        size: 13,
+        weight: '500'
+    };
 
     window.macroChart = new Chart(ctx, {
         type: 'line',
@@ -1268,54 +1420,108 @@ function renderMacroLineChart(data) {
                 {
                     label: 'Carbs (g)',
                     data: carbsData,
-                    borderColor: '#f4c542',
-                    backgroundColor: '#f4c54222',
-                    fill: false,
-                    tension: 0.3
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#f59e0b',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
                 },
                 {
                     label: 'Protein (g)',
                     data: proteinData,
                     borderColor: '#ff6f61',
-                    backgroundColor: '#ff6f6122',
-                    fill: false,
-                    tension: 0.3
+                    backgroundColor: 'rgba(255, 111, 97, 0.12)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ff6f61',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
                 },
                 {
                     label: 'Fat (g)',
                     data: fatData,
                     borderColor: '#6bd098',
-                    backgroundColor: '#6bd09822',
-                    fill: false,
-                    tension: 0.3
+                    backgroundColor: 'rgba(107, 208, 152, 0.12)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#6bd098',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
                 }
             ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            },
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Lượng Carbs, Protein, Fat theo ngày'
-                },
                 legend: {
-                    position: 'bottom'
+                    position: 'top',
+                    labels: {
+                        font: defaultFont,
+                        color: '#374151',
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.85)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#e5e7eb',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    titleFont: {
+                        ...defaultFont,
+                        size: 14,
+                        weight: '600'
+                    },
+                    bodyFont: {
+                        ...defaultFont,
+                        size: 13
+                    }
                 }
             },
             scales: {
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Gram (g)'
-                    },
-                    beginAtZero: true
-                },
                 x: {
-                    title: {
-                        display: true,
-                        text: 'Ngày'
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: defaultFont,
+                        color: '#6b7280'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: defaultFont,
+                        color: '#6b7280'
                     }
                 }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
             }
         }
     });

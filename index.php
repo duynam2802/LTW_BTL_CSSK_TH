@@ -180,17 +180,17 @@ if (!isset($_SESSION['user_id'])) {
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Huyết áp tâm thu (mmHg)</label>
-                                    <input type="number" placeholder="120" id="systolic">
+                                    <input type="number" placeholder="120" id="systolic" value="120">
                                 </div>
                                 <div class="form-group">
                                     <label>Huyết áp tâm trương (mmHg)</label>
-                                    <input type="number" placeholder="80" id="diastolic">
+                                    <input type="number" placeholder="80" id="diastolic" value="80">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Nhịp tim (bpm)</label>
-                                    <input type="number" placeholder="72" id="heartRate">
+                                    <input type="number" placeholder="72" id="heartRate" value="72">
                                 </div>
                                 <div class="form-group">
                                     <label>Ngày đo</label>
@@ -229,10 +229,16 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 <div class="charts-container">
                     <h3>Biểu đồ chỉ số sức khỏe</h3>
-                    <canvas id="lineChart"></canvas>
-
-                    <h3>Chiều cao và Cân nặng</h3>
-                    <canvas id="barChart"></canvas>
+                    <div class="charts-grid">
+                        <div class="chart-item">
+                            <h4>Chỉ số sức khỏe theo thời gian</h4>
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h4>Chiều cao và Cân nặng</h4>
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -306,8 +312,8 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
 
                 </div>
-                <div class="charts-container">
-                    <h3>Biểu đồ chỉ số sức khỏe</h3>
+                <div class="nutrition-charts-container">
+                    <h3>Biểu đồ chỉ số dinh dưỡng</h3>
                     <canvas id="macroLineChart"></canvas>
                 </div>
             </section>
