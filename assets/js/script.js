@@ -1300,15 +1300,16 @@ if (profileForm) {
 
 // Form cập nhật mục tiêu cá nhân
 // ...existing code...
+// ...existing code...
 const goalForm = document.getElementById('goalForm');
 if (goalForm) {
   goalForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    // Lấy giá trị và loại mục tiêu cân nặng
+    // Lấy giá trị radio tăng/giảm
+    const weightType = document.querySelector('input[name="weightGoalType"]:checked')?.value || 'down';
     const weightValue = parseFloat(document.getElementById('weightGoalValue').value) || null;
-    const weightType = document.getElementById('weightGoalType')?.value || 'up'; // 'up' hoặc 'down'
-    // Xử lý số dương/âm theo loại mục tiêu
-    const weightGoal = weightType === 'up' ? Math.abs(weightValue) : -Math.abs(weightValue);
+    // Nếu chọn tăng thì số dương, giảm thì số âm
+    const weightGoal = weightValue !== null ? (weightType === 'up' ? Math.abs(weightValue) : -Math.abs(weightValue)) : null;
 
     const formData = {
       weightGoal: weightGoal,
@@ -1318,12 +1319,13 @@ if (goalForm) {
     try {
       await apiRequest('goals/update.php', 'POST', formData);
       showToast('Đã cập nhật mục tiêu cá nhân!', 'success');
-      loadFullProfile();
+      loadFullProfile?.();
     } catch (error) {
       showToast('Không thể cập nhật mục tiêu', 'error');
     }
   });
 }
+// ...existing code...
 // ...existing code...
 
 // Khi chuyển sang tab Hồ sơ, tự động load dữ liệu

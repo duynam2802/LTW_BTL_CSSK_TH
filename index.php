@@ -576,16 +576,21 @@ if (!isset($_SESSION['user_id'])) {
                         <span class="icon">🎯</span>
                     </div>
                     <form class="goal-form" id="goalForm">
-                        <div class="form-group">
-                            <label>Mục tiêu cân nặng</label>
-                            <div class="weight-goal-row">
-                                <button type="button" class="goal-type-btn" id="btnWeightDown">Giảm</button>
-                                <button type="button" class="goal-type-btn" id="btnWeightUp">Tăng</button>
-                                <input type="number" id="weightGoalValue" min="0" placeholder="Số kg">
-                                <span>kg</span>
-                                <input type="hidden" id="weightGoalType" value="down">
-                            </div>
-                        </div>
+<div class="form-group">
+    <label>Mục tiêu cân nặng</label>
+    <div class="weight-goal-row">
+        <label>
+            <input type="radio" name="weightGoalType" id="weightGoalDown" value="down" checked>
+            Giảm
+        </label>
+        <label>
+            <input type="radio" name="weightGoalType" id="weightGoalUp" value="up">
+            Tăng
+        </label>
+        <input type="number" id="weightGoalValue" min="0" placeholder="Số kg">
+        <span>kg</span>
+    </div>
+</div>
                         <div class="form-group">
                             <label for="workoutGoal">Mục tiêu luyện tập (buổi/tuần)</label>
                             <input type="number" id="workoutGoal" placeholder="Ví dụ: 4">
