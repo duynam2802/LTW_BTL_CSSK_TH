@@ -1307,14 +1307,29 @@ function updateWeeklyGoals(goals) {
 
 function renderGoalList(goals) {
     updateWeeklyGoals(goals);
-  const container = document.getElementById('goalList');
-  if (!container) return;
-  container.innerHTML = goals.map(goal => `
-    <div class="goal-item">
-      <span>${goal.name}</span>
-      <span class="goal-status">${goal.current} / ${goal.target} ${goal.unit} (${goal.percentage}%)</span>
-    </div>
-  `).join('');
+    const container = document.getElementById('goalList');
+    if (!container) return;
+    container.innerHTML = goals.map(goal => {
+        if (goal.name === 'Cân nặng') {
+            const start = Number(goal.start) || 0;
+            const current = Number(goal.current) || 0;
+            const target = Number(goal.target) || 0;
+            const targetWeight = start + target;
+            return `
+                <div class="goal-item">
+                    <span>${goal.name}</span>
+                    <span class="goal-status">${current} / ${targetWeight} kg</span>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="goal-item">
+                    <span>${goal.name}</span>
+                    <span class="goal-status">${goal.current} / ${goal.target} ${goal.unit} (${goal.percentage}%)</span>
+                </div>
+            `;
+        }
+    }).join('');
 }
 
 function renderRecentActivities(activities) {
