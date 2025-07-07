@@ -270,22 +270,22 @@ function updateDashboardStats(stats) {
     }
 }
 
-function updateWeeklyGoals(goals) {
-    const container = document.getElementById('weeklyGoals');
-    if (!container || !goals.length) return;
+// function updateWeeklyGoals(goals) {
+//     const container = document.getElementById('weeklyGoals');
+//     if (!container || !goals.length) return;
     
-    container.innerHTML = goals.map(goal => `
-        <div class="progress-item">
-            <div class="progress-info">
-                <span>${goal.name}</span>
-                <span>${goal.current} ${goal.unit}</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${goal.percentage}%"></div>
-            </div>
-        </div>
-    `).join('');
-}
+//     container.innerHTML = goals.map(goal => `
+//         <div class="progress-item">
+//             <div class="progress-info">
+//                 <span>${goal.name}</span>
+//                 <span>${goal.current} ${goal.unit}</span>
+//             </div>
+//             <div class="progress-bar">
+//                 <div class="progress-fill" style="width: ${goal.percentage}%"></div>
+//             </div>
+//         </div>
+//     `).join('');
+// }
 
 function updateRecentActivities(activities) {
     const container = document.getElementById('recentActivities');
@@ -1176,7 +1176,7 @@ async function handleProfileSubmit(e) {
     
     const formData = {
         fullName: document.getElementById('fullName').value,
-        email: document.getElementById('email').value,
+        // email: document.getElementById('email').value,
         age: parseInt(document.getElementById('age').value) || null,
         gender: document.getElementById('gender').value
     };
@@ -1255,7 +1255,58 @@ function renderProfileAchievements(health, workout) {
   container.innerHTML = achievements.length ? achievements.join('') : '<div class="achievement"><span>Chưa có thành tích nổi bật</span></div>';
 }
 
+function updateWeeklyGoals(goals) {
+    const container = document.getElementById('weeklyGoals');
+    if (!container || !goals.length) return;
+
+    container.innerHTML = goals.map(goal => {
+        if (goal.name === 'Cân nặng') {
+            // Dùng đúng trường trả về từ API
+            const start = Number(goal.start) || 0;      // cân nặng khi đặt mục tiêu
+            const current = Number(goal.current) || 0;  // cân nặng hiện tại
+            const target = Number(goal.target) || 0;    // số kg muốn tăng/giảm
+            const targetWeight = start + target;
+
+            let percent = 0;
+            if (target < 0) {
+                // Giảm cân
+                percent = ((start - current) / Math.abs(target)) * 100;
+            } else if (target > 0) {
+                // Tăng cân
+                percent = ((current - start) / Math.abs(target)) * 100;
+            }
+            percent = Math.max(0, Math.min(100, percent));
+
+            return `
+                <div class="progress-item">
+                    <div class="progress-info">
+                        <span>${goal.name}</span>
+                        <span>${current} / ${targetWeight} kg</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percent}%; background-color: ${target > 0 ? '#2196f3' : target < 0 ? '#f44336' : '#999'}; height: 100%;"></div>
+                    </div>
+                </div>
+            `;
+        } else {
+            const percent = Number(goal.percentage ?? 0);
+            return `
+                <div class="progress-item">
+                    <div class="progress-info">
+                        <span>${goal.name}</span>
+                        <span>${goal.current} / ${goal.target} ${goal.unit}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percent}%; background-color: #4caf50; height: 100%;"></div>
+                    </div>
+                </div>
+            `;
+        }
+    }).join('');
+}
+
 function renderGoalList(goals) {
+    updateWeeklyGoals(goals);
   const container = document.getElementById('goalList');
   if (!container) return;
   container.innerHTML = goals.map(goal => `

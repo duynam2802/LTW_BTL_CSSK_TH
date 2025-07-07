@@ -327,7 +327,7 @@ if (!isset($_SESSION['user_id'])) {
                     <p>Quản lý và theo dõi các buổi tập luyện</p>
                 </div>
 
-                
+
 
                 <!-- Stats hiển thị thông tin tổng quan -->
                 <div class="stats-grid" id="workoutStats">
@@ -390,15 +390,15 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
 
                         <!-- filter workouts -->
-                <div class="history-filter" id="workoutsHistoryFilter" style="display: flex; align-items: center; gap: 8px;">
-                    <input type="date" id="workoutFilterDate" class = "filter-date">
-                    <div class="filter-btn-group">
-                        <button class="filter-btn" id="workoutPrevDayBtn"> ← </button>
-                        <button class="filter-btn" id="workoutCurrentDayBtn"> 📅 HIỆN TẠI </button>
-                        <button class="filter-btn" id="workoutNextDayBtn"> → </button>
-                    </div>
+                        <div class="history-filter" id="workoutsHistoryFilter" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="date" id="workoutFilterDate" class="filter-date">
+                            <div class="filter-btn-group">
+                                <button class="filter-btn" id="workoutPrevDayBtn"> ← </button>
+                                <button class="filter-btn" id="workoutCurrentDayBtn"> 📅 HIỆN TẠI </button>
+                                <button class="filter-btn" id="workoutNextDayBtn"> → </button>
+                            </div>
 
-                </div>
+                        </div>
 
                         <div class="workout-history" id="workoutHistory">
                             <!-- Workout history will be loaded here -->
@@ -576,21 +576,21 @@ if (!isset($_SESSION['user_id'])) {
                         <span class="icon">🎯</span>
                     </div>
                     <form class="goal-form" id="goalForm">
-<div class="form-group">
-    <label>Mục tiêu cân nặng</label>
-    <div class="weight-goal-row">
-        <label>
-            <input type="radio" name="weightGoalType" id="weightGoalDown" value="down" checked>
-            Giảm
-        </label>
-        <label>
-            <input type="radio" name="weightGoalType" id="weightGoalUp" value="up">
-            Tăng
-        </label>
-        <input type="number" id="weightGoalValue" min="0" placeholder="Số kg">
-        <span>kg</span>
-    </div>
-</div>
+                        <div class="form-group">
+                            <label>Mục tiêu cân nặng</label>
+                            <div class="weight-goal-row">
+                                <label>
+                                    <input type="radio" name="weightGoalType" id="weightGoalDown" value="down" checked>
+                                    Giảm
+                                </label>
+                                <label>
+                                    <input type="radio" name="weightGoalType" id="weightGoalUp" value="up">
+                                    Tăng
+                                </label>
+                                <input type="number" id="weightGoalValue" min="0" placeholder="Số kg">
+                                <span>kg</span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="workoutGoal">Mục tiêu luyện tập (buổi/tuần)</label>
                             <input type="number" id="workoutGoal" placeholder="Ví dụ: 4">

@@ -17,11 +17,15 @@ try {
     $goals = [];
 
     // Cân nặng
-    $weightGoalQuery = "SELECT target_value FROM goals WHERE user_id = :user_id AND goal_type = 'weight' AND is_active = 1 ORDER BY id DESC LIMIT 1";
+    $weightGoalQuery = "SELECT target_value, current_value FROM goals WHERE user_id = :user_id AND goal_type = 'weight' AND is_active = 1 ORDER BY id DESC LIMIT 1";
     $weightGoalStmt = $db->prepare($weightGoalQuery);
     $weightGoalStmt->bindParam(':user_id', $userId);
     $weightGoalStmt->execute();
-    $weightGoal = $weightGoalStmt->fetchColumn();
+    $weightGoalRow = $weightGoalStmt->fetch(PDO::FETCH_ASSOC);
+
+    $weightGoal = $weightGoalRow ? $weightGoalRow['target_value'] : null;
+    $weightStart = $weightGoalRow ? $weightGoalRow['current_value'] : null;
+
     // Lấy cân nặng hiện tại
     $weightQuery = "SELECT weight FROM health_records WHERE user_id = :user_id ORDER BY measure_date DESC LIMIT 1";
     $weightStmt = $db->prepare($weightQuery);
@@ -32,8 +36,10 @@ try {
         'name' => 'Cân nặng',
         'current' => $currentWeight ? floatval($currentWeight) : null,
         'target' => $weightGoal ? floatval($weightGoal) : null,
+        'start'  => $weightStart ? floatval($weightStart) : null, // <-- thêm dòng này
         'unit' => 'kg',
-        'percentage' => ($weightGoal && $currentWeight) ? round(min(100, abs($currentWeight / $weightGoal) * 100)) : 0
+        // percentage có thể để 0, JS sẽ tự tính lại
+        'percentage' => 0
     ];
 
     // Bài tập/tuần
