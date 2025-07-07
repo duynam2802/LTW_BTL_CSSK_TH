@@ -1152,7 +1152,7 @@ function populateGoalForm(goals) {
     const weightGoal = goals.find(g => g.name === 'Cân nặng');
     const workoutGoal = goals.find(g => g.name === 'Bài tập');
     const calorieGoal = goals.find(g => g.name === 'Calo');
-    if (weightGoal) document.getElementById('weightGoalValue').value = weightGoal.target || '';
+    if (weightGoal) document.getElementById('weightGoalValue').value = Math.abs(weightGoal.target) || '';
     if (workoutGoal) document.getElementById('workoutGoal').value = workoutGoal.target || '';
     if (calorieGoal) document.getElementById('calorieGoalInput').value = calorieGoal.target || '';
 }
