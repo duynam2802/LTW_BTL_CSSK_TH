@@ -2,6 +2,9 @@
 
 Hệ thống theo dõi sức khỏe và thể dục dành cho sinh viên Đại học Giao thông Vận tải TP.HCM.
 
+## Account test:
+- **Email:** admin@uth.edu.vn  
+- **Password:** password
 ## Tính năng
 
 - **Đăng nhập/Đăng ký**: Xác thực người dùng an toàn
@@ -18,15 +21,37 @@ Hệ thống theo dõi sức khỏe và thể dục dành cho sinh viên Đại 
 - **Backend**: PHP 7.4+
 - **Database**: MySQL 5.7+
 
-## Cài đặt
+## Cài đặt 
+## Chạy bằng Docker (XAMPP)
 
-### Yêu cầu hệ thống
+### Yêu cầu
 
-- PHP 7.4 hoặc cao hơn
-- MySQL 5.7 hoặc cao hơn
-- Web server (Apache/Nginx)
+- Cài đặt [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- Đảm bảo Docker đang chạy trong nền
+- Cài đặt Github CLI: [https://cli.github.com/](https://cli.github.com/)
 
-### Hướng dẫn cài đặt
+### B1: Khởi động Docker Desktop
+Khởi động Docker trước khi tiếp tục.
+### B2: Mở terminal (hoặc PowerShell trên Windows)
+``` base 
+git clone https://github.com/duynam2802/LTW_BTL_CSSK_TH.git
+```
+#### Hoặc tải xuống mã nguồn (.zip) rồi giải nén tại link trên https://github.com/duynam2802/LTW_BTL_CSSK_TH.git
+
+### B3: Trong thư mục chứa mã nguồn, mở powershell và chạy lệnh: 
+``` base 
+docker compose up -d
+```	
+
+### B4: Có thể đăng nhập bằng tài khoản demo: [Admin](#tài-khoản-demo)
+
+### Khi không dùng nữa, chạy lệnh sau để dừng các container:
+``` base 
+docker compose down
+```
+
+
+## Hướng dẫn cài đặt trên server
 
 
 **Cấu hình database**:
@@ -147,3 +172,14 @@ LTW_BTL_CSSK_TH/
 - SQL injection prevention
 - XSS protection
 - CSRF protection
+
+
+## 📚 Mục lục
+
+- [Tính năng](#tính-năng)
+- [Tài khoản demo](#tài-khoản-demo)
+- [Cài đặt](#cài-đặt)
+- [Chạy bằng Docker (XAMPP)](#chạy-bằng-docker-xampp)
+- [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+- [API Endpoints](#api-endpoints)
+- [Bảo mật](#bảo-mật)
