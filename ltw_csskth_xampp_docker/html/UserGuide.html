@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Phòng Tập - Gym Equipment Guide</title>
+    <meta name="description" content="Hướng dẫn chi tiết cách sử dụng các thiết bị phòng tập gym một cách an toàn và hiệu quả">
+    <link rel="stylesheet" href="./assets/css/UserGuide.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+    <link rel="stylesheet" href="./assets/css/home.css?v=2">
+</head>
+<body>
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <button class="menu-toggle">☰</button>
+    <div class="logo-text"><img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img" style="width:28px;height:28px;margin-right:6px;vertical-align:middle;"> UTH Health & Fitness</div>
+  </header>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img" style="width:40px;height:40px;margin-right:10px;vertical-align:middle;">
+      <div style="display:inline-block;vertical-align:middle;">
+        <h2 style="display:inline;vertical-align:middle;">UTH Health & Fitness</h2>
+        <div class="sidebar-subtitle sidebar-subtitle-red">Chăm sóc sức khỏe - thể hình</div>
+        <hr class="sidebar-divider">
+      </div>
+      <button class="close-btn">×</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html#about">📘 Giới thiệu</a>
+      <a href="home.html#features">⚙️ Tính năng</a>
+      <a href="home.html#benefits">💡 Lợi ích</a>
+      <a href="home.html#facility">🏢 Cơ sở vật chất</a>
+      <a href="UserGuide.html">🏋️ Hướng dẫn phòng tập</a>
+      <hr>
+      <a href="login.html">🔐 Đăng nhập</a>
+      <a href="register.html">📝 Đăng ký</a>
+    </nav>
+  </aside>
+
+  <!-- Desktop Header -->
+  <header class="header desktop-header">
+    <div class="header__logo">
+      <img src="assets/img/uth-logo.png" alt="UTH Logo" class="logo-img" style="width:32px;height:32px;margin-right:8px;vertical-align:middle;"> UTH Health & Fitness
+    </div>
+    <nav class="header__nav">
+      <ul class="header__menu">
+        <li><a href="home.html#about">Giới thiệu</a></li>
+        <li><a href="home.html#features">Tính năng</a></li>
+        <li><a href="home.html#benefits">Lợi ích</a></li>
+        <li><a href="home.html#facility">Cơ sở vật chất</a></li>
+        <li><a href="UserGuide.html">Hướng dẫn phòng tập</a></li>
+      </ul>
+      <div class="header__auth">
+        <a href="login.html" class="btn btn--outline">Đăng nhập</a>
+        <a href="register.html" class="btn btn--primary">Đăng ký</a>
+      </div>
+    </nav>
+  </header>
+    <script id="equipment-images">
+        window.equipmentImages = {
+            'treadmill': 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'bench-press': 'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'leg-press': 'https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'lat-pulldown': 'https://images.pexels.com/photos/1552252/pexels-photo-1552252.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'rowing-machine': 'https://images.pexels.com/photos/4162449/pexels-photo-4162449.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'smith-machine': 'https://images.pexels.com/photos/1552103/pexels-photo-1552103.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'elliptical': 'https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'cable-machine': 'https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg?auto=compress&cs=tinysrgb&w=800'
+        };
+    </script>
+    <!-- Header -->
+    <div class="header header-guide-redesign">
+      <div class="container">
+        <div class="header-guide-icon">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <!-- Dumbbell nghiêng, màu trắng -->
+            <g transform="rotate(-25 40 40)">
+              <rect x="28" y="37" width="24" height="6" rx="3" fill="#fff"/>
+              <rect x="22" y="34" width="4" height="12" rx="2" fill="#fff"/>
+              <rect x="54" y="34" width="4" height="12" rx="2" fill="#fff"/>
+            </g>
+          </svg>
+        </div>
+        <h1 class="header-guide-title">Hướng Dẫn Phòng Tập</h1>
+        <p class="header-guide-desc">Khám phá và nắm vững cách sử dụng các thiết bị phòng tập một cách an toàn và hiệu quả</p>
+      </div>
+    </div>
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </div>
+                    <h3>8+</h3>
+                    <p>Thiết bị chính</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="m22 21-2-2"/>
+                            <path d="m16 16 2 2"/>
+                        </svg>
+                    </div>
+                    <h3>3</h3>
+                    <p>Mức độ khó</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/>
+                        </svg>
+                    </div>
+                    <h3>2</h3>
+                    <p>Danh mục</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
+                        </svg>
+                    </div>
+                    <h3>100%</h3>
+                    <p>An toàn</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <div class="filter-section">
+                <button class="filter-btn active" data-category="all">Tất cả</button>
+                <button class="filter-btn" data-category="cardio">Cardio</button>
+                <button class="filter-btn" data-category="strength">Sức mạnh</button>
+            </div>
+            <div class="equipment-grid" id="equipmentGrid">
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+<footer class="footer">
+  <div class="footer__container">
+    <div class="footer__brand">
+      <span class="footer__logo">🎓</span>
+      <span class="footer__title">UTH Health & Fitness</span>
+      <p class="footer__desc">Ứng dụng chăm sóc sức khỏe toàn diện cho sinh viên UTH.</p>
+    </div>
+    <div class="footer__contact">
+      <h4>Liên hệ</h4>
+      <p>Trường Đại học Giao thông Vận tải TP.HCM (UTH)</p>
+      <p>Email: UTHFitness@uth.edu.vn</p>
+      <p>Địa chỉ: số 70, đường Tô Ký, P. Trung Mỹ Tây, TP. HCM (Cơ sở 3)</p>
+    </div>
+    <div class="footer__cta">
+      <h2>Bắt đầu hành trình chăm sóc sức khỏe của bạn!</h2>
+      <div class="cta__actions">
+        <a href="register.html" class="btn btn--primary">Đăng ký ngay</a>
+        <a href="login.html" class="btn btn--outline">Đăng nhập</a>
+      </div>
+      <p class="cta__desc">Miễn phí 100% cho sinh viên UTH</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+      <span>&copy; 2025 UTH Health & Fitness. Thiết kế bởi <a href="https://duynam2802.github.io/LTW_CV_NHOM_16/">Nhóm 16</a>.</span>
+  </div>
+</footer>
+<!-- End Footer Section -->
+    <!-- Sidebar JavaScript -->
+    <script>
+      const toggleBtn = document.querySelector('.menu-toggle');
+      const closeBtn = document.querySelector('.close-btn');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const authBtns = document.querySelectorAll('.auth-btn');
+
+      function openSidebar() {
+        sidebar.classList.add('active');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeSidebar() {
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      toggleBtn.addEventListener('click', openSidebar);
+      closeBtn.addEventListener('click', closeSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+
+      // Close sidebar when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+          closeSidebar();
+        }
+      });
+
+      // Handle auth button clicks
+      authBtns[0].addEventListener('click', () => {
+        window.location.href = 'login.html';
+      });
+
+      authBtns[1].addEventListener('click', () => {
+        window.location.href = 'register.html';
+      });
+    </script>
+
+    <script src="./assets/js/UserGuide.js"></script>
+</body>
+</html>
