@@ -39,7 +39,8 @@ git clone https://github.com/duynam2802/LTW_BTL_CSSK_TH.git
 #### Hoặc tải xuống mã nguồn (.zip) rồi giải nén tại link trên https://github.com/duynam2802/LTW_BTL_CSSK_TH.git
 
 ### B3: Trong thư mục chứa mã nguồn, mở powershell và chạy lệnh: 
-``` base 
+``` base
+cd ltw_csskth_xampp_docker
 docker compose up -d
 ```	
 
@@ -52,7 +53,6 @@ docker compose down
 
 
 ## Hướng dẫn cài đặt trên server
-
 
 **Cấu hình database**:
    - Tạo database MySQL mới
