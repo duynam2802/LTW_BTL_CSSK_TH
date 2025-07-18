@@ -22,5 +22,10 @@ services:
       MYSQL_DATABASE: uth_health
       MYSQL_USER: uth_user
       MYSQL_PASSWORD: uth_pass
+      # Thiết lập UTF-8
+      LANG: C.UTF-8
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci

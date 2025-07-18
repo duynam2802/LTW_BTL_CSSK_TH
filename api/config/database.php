@@ -1,14 +1,14 @@
 <?php
 class Database {
-    private $host = "localhost";
-    private $db_name = "uth_health";
-    private $username = "root";
-    private $password = "";
+    // private $host = "localhost";
+    // private $db_name = "uth_health";
+    // private $username = "root";
+    // private $password = "";
 
-    // private $host = "sql100.infinityfree.com";
-    // private $db_name = "if0_39385541_uth_health";
-    // private $username = "if0_39385541";
-    // private $password = "Q0t6Gpp9c9O9";
+    private $host = "sql100.infinityfree.com";
+    private $db_name = "if0_39385541_uth_health";
+    private $username = "if0_39385541";
+    private $password = "Q0t6Gpp9c9O9";
     public $conn;
 
     public function getConnection() {
