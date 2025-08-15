@@ -2,6 +2,8 @@
 
 Hệ thống theo dõi sức khỏe và thể dục dành cho sinh viên Đại học Giao thông Vận tải TP.HCM.
 
+## Page: https://uth-health-and-fitness-nhom-16.great-site.net/
+
 ## Account test:
 - **Email:** admin@uth.edu.vn  
 - **Password:** password
@@ -44,7 +46,11 @@ cd ltw_csskth_xampp_docker
 docker compose up -d
 ```	
 
-### B4: Có thể đăng nhập bằng tài khoản demo: [Admin](#tài-khoản-demo)
+### B4: Truy cập link trên trình duyệt:
+``` link
+localhost:8080/
+```
+Có thể đăng nhập bằng tài khoản demo: [Admin](#tài-khoản-demo)
 
 ### Khi không dùng nữa, chạy lệnh sau để dừng các container:
 ``` base 
